@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Procurement Portal (Prototype)</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom scrollbar and transitions */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        
+        /* Specific flex behavior for search tab to center it */
+        #tab-search.active { display: flex; flex-direction: column; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .tooltip { visibility: hidden; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+        .nav-item:hover .tooltip { visibility: visible; opacity: 1; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 w-screen h-screen flex overflow-hidden font-sans">
+
+    <!-- Sidebar Navigation (Shrunk for more main space) -->
+    <aside class="w-16 bg-slate-900 flex flex-col items-center py-5 shadow-xl z-20 shrink-0">
+        <div class="text-blue-400 text-2xl mb-8"><i class="fa-solid fa-microchip"></i></div>
+        <nav class="flex flex-col gap-4 w-full">
+            <!-- Navigation Items -->
+            <!-- 1. Home / Search -->
+            <button onclick="switchTab('tab-search', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative active-nav text-white bg-slate-800">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Home / Search</span>
+            </button>
+            <!-- 2. Pricing DB -->
+            <button onclick="switchTab('tab-pricing', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Pricing DB</span>
+            </button>
+            <!-- 3. SOP -->
+            <button onclick="switchTab('tab-sop', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
+                <i class="fa-solid fa-book-open text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">SOP & Guidelines</span>
+            </button>
+            <!-- 4. Systems -->
+            <button onclick="switchTab('tab-systems', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
+                <i class="fa-solid fa-cubes text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Core Systems</span>
+            </button>
+            <!-- 5. Auto Report -->
+            <button onclick="switchTab('tab-report', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
+                <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Auto Report</span>
+            </button>
+            <!-- 6. Calendar -->
+            <button onclick="switchTab('tab-calendar', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
+                <i class="fa-regular fa-calendar-check text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Schedule</span>
+            </button>
+            <!-- 7. Voice Out -->
+            <button onclick="switchTab('tab-voice', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
+                <i class="fa-regular fa-comments text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Voice Out</span>
+            </button>
+            <!-- 8. Industry News -->
+            <button onclick="switchTab('tab-news', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
+                <i class="fa-regular fa-newspaper text-lg"></i>
+                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Industry News</span>
+            </button>
+        </nav>
+        <!-- User Profile Icon -->
+        <div class="mt-auto text-slate-500 pb-2">
+            <i class="fa-solid fa-user-circle text-xl hover:text-white cursor-pointer transition"></i>
+        </div>
+    </aside>
+
+    <!-- Main Content Area (Restricted overflow to prevent random scrolling) -->
+    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden p-8 relative box-border">
+
+        <!-- 1. Smart Assistant (Search) - Centered Design -->
+        <section id="tab-search" class="tab-content active h-full justify-center items-center max-w-3xl mx-auto pb-20">
+            <!-- Hero Title -->
+            <div class="text-center mb-8 w-full transition-all duration-500" id="search-hero">
+                <div class="text-blue-500 text-5xl mb-6"><i class="fa-solid fa-sparkles"></i></div>
+                <h1 class="text-4xl font-bold text-slate-800 mb-2">Procurement Assistant</h1>
+                <p class="text-slate-500">Search for pricing, SOPs, or vendor intelligence</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full bg-white shadow-md rounded-full flex items-center p-2 mb-8 border border-slate-200 hover:shadow-lg transition">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 ml-4"></i>
+                <input type="text" placeholder="e.g. PO 簽核層級規範為何？ / 整理 Q3 LAM Etch 價格..." class="flex-1 px-4 py-3 outline-none rounded-full text-slate-700 w-full" onkeypress="if(event.key === 'Enter') showSearchResult()">
+                <button onclick="showSearchResult()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-medium transition shrink-0">Ask</button>
+            </div>
+            
+            <!-- Mock Chat Result (Initially Hidden) -->
+            <div id="search-result" class="hidden w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100 animate-[fadeIn_0.5s_ease-in-out]">
+                <div class="flex items-center gap-3 mb-4 border-b border-slate-50 pb-3">
+                    <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-robot text-sm"></i></div>
+                    <span class="font-semibold text-slate-800">AI Assistant</span>
+                </div>
+                <div class="text-slate-600 leading-relaxed space-y-3 pl-11">
+                    <p>根據內部 SOP 與 Pricing DB，為您整理以下資訊：</p>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <p class="font-medium text-slate-700 mb-2"><i class="fa-solid fa-file-signature text-blue-500 mr-2"></i>關於 PO 簽核層級（節錄自資產採購 SOP v3.2）：</p>
+                        <ul class="list-disc pl-5 space-y-1 text-sm">
+                            <li><strong>USD 1M 以下</strong>：部級主管 (Director) 簽核。</li>
+                            <li><strong>USD 1M - 10M</strong>：處級主管 (VP) 簽核。</li>
+                            <li><strong>USD 10M 以上</strong>：需呈報 CEO 及 CFO 聯合簽核，並附上 Selection Meeting 決議紀錄。</li>
+                        </ul>
+                    </div>
+                    <p class="text-sm text-blue-600 mt-2 cursor-pointer hover:underline inline-block"><i class="fa-solid fa-link mr-1"></i> 開啟完整 SOP 文件 (PR/PO Approval System)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Pricing DB (Table & Chart) -->
+        <section id="tab-pricing" class="tab-content max-w-6xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6">Equipment Pricing Intelligence</h2>
+            
+            <!-- Filters -->
+            <div class="flex flex-wrap gap-4 mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                <input type="text" placeholder="Search Vendor / Model..." class="border border-slate-200 rounded-lg px-4 py-2 min-w-[200px] flex-1 focus:outline-none focus:border-blue-400">
+                <select class="border border-slate-200 rounded-lg px-4 py-2 focus:outline-none bg-white"><option>All Sites</option><option>Fab 1</option><option>Fab 2</option></select>
+                <select class="border border-slate-200 rounded-lg px-4 py-2 focus:outline-none bg-white"><option>All Years</option><option>2024</option><option>2023</option></select>
+                <button class="bg-slate-800 text-white px-6 py-2 rounded-lg hover:bg-slate-700 transition">Filter</button>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-6">
+                <h3 class="text-lg font-semibold mb-4 text-slate-700">Cost Saving Analysis (Mock Data: Applied Materials - Centura)</h3>
+                <!-- Ensure chart container doesn't overflow -->
+                <div class="w-full relative" style="height: 300px;">
+                    <canvas id="pricingChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Table Section (X-scroll only here if needed) -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden w-full">
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full text-left text-sm whitespace-nowrap min-w-max">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+                            <tr>
+                                <th class="p-4 font-medium">Site</th>
+                                <th class="p-4 font-medium">Entity</th>
+                                <th class="p-4 font-medium">Tool ID</th>
+                                <th class="p-4 font-medium">Vendor</th>
+                                <th class="p-4 font-medium">Model</th>
+                                <th class="p-4 font-medium">Year</th>
+                                <th class="p-4 font-medium">Last PO#</th>
+                                <th class="p-4 font-medium text-right">Price (USD)</th>
+                                <th class="p-4 font-medium text-center">Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700">
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-4">Fab 1</td><td class="p-4">Corp A</td><td class="p-4">CVD-01</td><td class="p-4">AMAT</td><td class="p-4">Centura</td><td class="p-4">2024</td><td class="p-4">PO-24001</td><td class="p-4 font-mono text-right">$4,200,000</td>
+                                <td class="p-4 text-center"><a href="#" class="text-blue-600 hover:underline"><i class="fa-solid fa-up-right-from-square"></i> Link</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-4">Fab 2</td><td class="p-4">Corp B</td><td class="p-4">ETCH-05</td><td class="p-4">LAM</td><td class="p-4">Kiyo</td><td class="p-4">2023</td><td class="p-4">PO-23112</td><td class="p-4 font-mono text-right">$3,850,000</td>
+                                <td class="p-4 text-center"><a href="#" class="text-blue-600 hover:underline"><i class="fa-solid fa-up-right-from-square"></i> Link</a></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-4">Fab 1</td><td class="p-4">Corp A</td><td class="p-4">LITH-02</td><td class="p-4">ASML</td><td class="p-4">NXT:2000i</td><td class="p-4">2024</td><td class="p-4">PO-24089</td><td class="p-4 font-mono text-right">$65,000,000</td>
+                                <td class="p-4 text-center"><a href="#" class="text-blue-600 hover:underline"><i class="fa-solid fa-up-right-from-square"></i> Link</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SOP -->
+        <section id="tab-sop" class="tab-content max-w-6xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6">Documentation & SOP</h2>
+            <div class="relative mb-8">
+                <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                <input type="text" placeholder="Search keywords (e.g. NDAs, 新人教學)..." class="w-full border border-slate-200 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-blue-400 shadow-sm">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Cards -->
+                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
+                    <div class="text-blue-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-sitemap"></i></div>
+                    <h3 class="font-bold text-slate-800 mb-2">內部規章</h3>
+                    <p class="text-sm text-slate-500 flex-1">包含採購道德規範、利益迴避條款與稽核流程說明。</p>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
+                    <div class="text-emerald-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3 class="font-bold text-slate-800 mb-2">作業 Mind Map</h3>
+                    <p class="text-sm text-slate-500 flex-1">視覺化的機台導入、議價到交貨驗收完整心智圖。</p>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
+                    <div class="text-purple-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-book-journal-whills"></i></div>
+                    <h3 class="font-bold text-slate-800 mb-2">議價教戰手冊</h3>
+                    <p class="text-sm text-slate-500 flex-1">針對各大 Vendor 的談判策略與籌碼分析。</p>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
+                    <div class="text-orange-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <h3 class="font-bold text-slate-800 mb-2">新人手冊</h3>
+                    <p class="text-sm text-slate-500 flex-1">Buyer 必備系統權限申請、術語縮寫表與基礎訓練。</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- 4. Core Systems -->
+        <section id="tab-systems" class="tab-content max-w-6xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6">Quick Links to Core Systems</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="SAP" class="h-10 object-contain mb-3 opacity-80">
+                    <span class="font-semibold text-slate-700">SAP ERP</span>
+                </a>
+                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
+                    <i class="fa-solid fa-file-signature text-4xl mb-3 text-blue-500"></i>
+                    <span class="font-semibold text-sm text-center">PR / PO Approval</span>
+                </a>
+                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
+                    <i class="fa-solid fa-cloud-arrow-up text-4xl mb-3 text-sky-500"></i>
+                    <span class="font-semibold text-sm text-center">EP System</span>
+                </a>
+                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
+                    <i class="fa-solid fa-file-contract text-4xl mb-3 text-emerald-500"></i>
+                    <span class="font-semibold text-sm text-center">NDA Gateway</span>
+                </a>
+                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
+                    <i class="fa-solid fa-server text-4xl mb-3 text-purple-500"></i>
+                    <span class="font-semibold text-sm text-center">資產系統</span>
+                </a>
+                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
+                    <i class="fa-solid fa-folder-open text-4xl mb-3 text-amber-500"></i>
+                    <span class="font-semibold text-sm text-center">OS Document</span>
+                </a>
+                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
+                    <i class="fa-solid fa-database text-4xl mb-3 text-rose-500"></i>
+                    <span class="font-semibold text-sm text-center">Pricing DB</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 5. Auto Report -->
+        <section id="tab-report" class="tab-content max-w-3xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-center">AI Report Generator</h2>
+            <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Target Audience (報告對象)</label>
+                    <select class="w-full border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-400 bg-white">
+                        <option>Executive Team (CEO/CFO/VP)</option>
+                        <option>Fab Directors / Managers</option>
+                        <option>Internal Procurement Team</option>
+                    </select>
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Report Context & Key Points (報告內容與重點)</label>
+                    <textarea rows="5" placeholder="例如：請幫我整理 Q3 LAM Etch 機台的議價成果，強調透過 bundling 拿到的 5% extra discount..." class="w-full border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-400 resize-none"></textarea>
+                </div>
+                <button onclick="generateReport(this)" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition">
+                    <i class="fa-solid fa-file-powerpoint mr-2"></i> Generate PPTX
+                </button>
+                <div id="loading-report" class="hidden text-center mt-4 text-slate-500">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500 mb-2"></i>
+                    <p class="text-sm">Retrieving data & building slides...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Calendar -->
+        <section id="tab-calendar" class="tab-content max-w-6xl mx-auto">
+            <div class="flex justify-between items-end mb-6">
+                <h2 class="text-2xl font-bold">Buyer Routine Schedule</h2>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"><i class="fa-solid fa-plus mr-1"></i> Add Event</button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Weekly Tasks -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 font-bold text-slate-700"><i class="fa-solid fa-calendar-week mr-2 text-blue-500"></i> Weekly Routines</div>
+                    <ul class="divide-y divide-slate-100">
+                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                            <div><span class="inline-block w-16 text-xs font-bold text-slate-400">MON PM</span><span class="font-medium text-slate-800">2nd Source Meeting</span></div>
+                            <i class="fa-regular fa-bell text-slate-300 hover:text-blue-500 cursor-pointer"></i>
+                        </li>
+                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                            <div><span class="inline-block w-16 text-xs font-bold text-slate-400">TUE PM</span><span class="font-medium text-slate-800">Department Weekly Meeting</span></div>
+                            <i class="fa-regular fa-bell text-slate-300 hover:text-blue-500 cursor-pointer"></i>
+                        </li>
+                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                            <div><span class="inline-block w-16 text-xs font-bold text-slate-400 border border-red-200 text-red-500 px-1 rounded text-center bg-red-50">THU</span> <span class="font-medium text-slate-800">交期更新 (Delivery Update)</span></div>
+                            <i class="fa-solid fa-bell text-amber-400 cursor-pointer" title="Reminder Active"></i>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Monthly/Quarterly Tasks -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 font-bold text-slate-700"><i class="fa-solid fa-calendar-days mr-2 text-emerald-500"></i> Periodic Routines</div>
+                    <ul class="divide-y divide-slate-100">
+                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                            <div><span class="inline-block w-20 px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded mr-3 text-center">Monthly</span><span class="font-medium text-slate-800">PO Status Update</span></div>
+                        </li>
+                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                            <div><span class="inline-block w-20 px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded mr-3 text-center">Quarterly</span><span class="font-medium text-slate-800">Lead Time & Vendor Loading</span></div>
+                        </li>
+                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                            <div><span class="inline-block w-20 px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded mr-3 text-center">Biannual</span><span class="font-medium text-slate-800">Vendor Credit Survey</span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Voice Out -->
+        <section id="tab-voice" class="tab-content max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6">Voice Out / Bulletin Board</h2>
+            
+            <!-- Create Post -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
+                <textarea rows="3" placeholder="抒發一下心情，或是分享工作上的心得..." class="w-full border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-400 resize-none mb-4"></textarea>
+                <div class="flex justify-between items-center">
+                    <label class="flex items-center text-sm text-slate-600 cursor-pointer">
+                        <input type="checkbox" class="mr-2 h-4 w-4 text-blue-600 rounded" checked> Post Anonymously (匿名發文)
+                    </label>
+                    <button class="bg-slate-800 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition">Post</button>
+                </div>
+            </div>
+
+            <!-- Feed -->
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex gap-4">
+                    <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 shrink-0"><i class="fa-solid fa-user-secret"></i></div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-bold text-slate-700">Anonymous</span>
+                            <span class="text-xs text-slate-400">2 hours ago</span>
+                        </div>
+                        <p class="text-slate-600 text-sm">最近某 A 開頭的美商交期一直 delay，打電話去催還一直推給零件商，大家有遇到一樣的狀況嗎？到底該怎麼壓他們交期啊心好累 😫</p>
+                        <div class="mt-3 flex gap-4 text-slate-400 text-sm">
+                            <button class="hover:text-blue-500 transition"><i class="fa-regular fa-thumbs-up"></i> 12</button>
+                            <button class="hover:text-blue-500 transition"><i class="fa-regular fa-comment"></i> 4 Comments</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex gap-4">
+                    <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 font-bold">J</div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-bold text-slate-700">Jason Chen (Real Name)</span>
+                            <span class="text-xs text-slate-400">Yesterday</span>
+                        </div>
+                        <p class="text-slate-600 text-sm">分享一下，這季跟日系設備商談判時，可以多利用近期匯率走勢來做籌碼，今天剛成功把某個 Spare parts 的合約價格談下來 5%，大家可以試試看！</p>
+                        <div class="mt-3 flex gap-4 text-slate-400 text-sm">
+                            <button class="text-blue-500"><i class="fa-solid fa-thumbs-up"></i> 34</button>
+                            <button class="hover:text-blue-500 transition"><i class="fa-regular fa-comment"></i> 1 Comment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Industry News -->
+        <section id="tab-news" class="tab-content max-w-5xl mx-auto">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold mb-1">Weekly Industry Insights</h2>
+                    <p class="text-slate-500 text-sm">Curated by Procurement Experts</p>
+                </div>
+                <select class="border border-slate-200 rounded-lg px-3 py-1 text-sm focus:outline-none bg-white"><option>All Categories</option><option>Equipment</option><option>Raw Materials</option></select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- News Item -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition">
+                    <div class="bg-slate-800 text-white text-xs font-bold px-3 py-1 uppercase tracking-wider w-max m-4 rounded">Equipment</div>
+                    <div class="px-6 pb-4 flex-1 flex flex-col">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">ASML 預計 2025 年 High-NA EUV 出貨量將翻倍</h3>
+                        <p class="text-slate-600 text-sm mb-4 line-clamp-3">
+                            【顧問點評】這意味著先進製程的機台搶奪戰將提早白熱化。建議 Buyer 在評估 2nm 以下製程的建廠需求時，需提早至少 18 個月向 ASML 鎖定產能。
+                        </p>
+                        <div class="mt-auto border-t border-slate-100 pt-3 flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Oct 24, 2024</span>
+                            <a href="#" class="text-blue-600 hover:underline">Source: SemiMedia <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Item -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition">
+                    <div class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-wider w-max m-4 rounded">Raw Materials</div>
+                    <div class="px-6 pb-4 flex-1 flex flex-col">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">日本信越化學宣布擴建光阻劑產線，預計緩解供應緊繃</h3>
+                        <p class="text-slate-600 text-sm mb-4 line-clamp-3">
+                            【顧問點評】光阻劑過去半年的 lead time 嚴重拉長，Buyer 可以在下個月的 QBR 中，要求當地代理商提供最新的 allocations 計畫。
+                        </p>
+                        <div class="mt-auto border-t border-slate-100 pt-3 flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Oct 22, 2024</span>
+                            <a href="#" class="text-blue-600 hover:underline">Source: EE Times <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script logic -->
+    <script>
+        // Search bar reveal logic for the first tab
+        function showSearchResult() {
+            const resultBox = document.getElementById('search-result');
+            const heroText = document.getElementById('search-hero');
+            
+            // Show result
+            resultBox.classList.remove('hidden');
+            // Shrink hero text to make room
+            heroText.classList.add('scale-90', 'opacity-80', 'mb-2');
+            heroText.classList.remove('mb-8');
+        }
+
+        // Tab switching logic
+        function switchTab(tabId, element) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Remove active state from all nav buttons
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('text-white', 'bg-slate-800');
+                el.classList.add('text-slate-400');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active state to clicked button
+            element.classList.remove('text-slate-400');
+            element.classList.add('text-white', 'bg-slate-800');
+
+            // Render chart if Pricing tab is opened
+            if(tabId === 'tab-pricing' && !window.pricingChartRendered) {
+                renderChart();
+                window.pricingChartRendered = true;
+            }
+        }
+
+        // Mock Report Generator simulation
+        function generateReport(btn) {
+            const loading = document.getElementById('loading-report');
+            const originalHTML = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            loading.classList.remove('hidden');
+            
+            // Simulate 2 seconds loading
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                btn.classList.remove('opacity-50');
+                btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Report Downloaded';
+                btn.classList.replace('from-blue-600', 'from-emerald-500');
+                btn.classList.replace('to-indigo-600', 'to-emerald-600');
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                    btn.classList.replace('from-emerald-500', 'from-blue-600');
+                    btn.classList.replace('to-emerald-600', 'to-indigo-600');
+                }, 3000);
+            }, 2000);
+        }
+
+        // Chart.js rendering for Pricing DB (Mixed Chart: Bar + Lines)
+        function renderChart() {
+            const ctx = document.getElementById('pricingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024'],
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'PO Amount (M USD)',
+                            data: [120, 150, 180, 140],
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Incentive %',
+                            data: [2, 3.5, 4, 4.5],
+                            borderColor: '#10b981',
+                            backgroundColor: '#10b981',
+                            tension: 0.3,
+                            borderWidth: 3,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Price Down %',
+                            data: [1.5, 2, 2.8, 3.2],
+                            borderColor: '#f59e0b',
+                            backgroundColor: '#f59e0b',
+                            tension: 0.3,
+                            borderWidth: 3,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            type: 'line',
+                            label: 'Total Saving %',
+                            data: [3.5, 5.5, 6.8, 7.7],
+                            borderColor: '#6366f1',
+                            backgroundColor: '#6366f1',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            borderWidth: 3,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'PO Amount (M USD)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Percentage (%)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.dataset.type === 'bar') {
+                                        label += '$' + context.parsed.y + 'M';
+                                    } else {
+                                        label += context.parsed.y + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
