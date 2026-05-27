@@ -2,572 +2,822 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment Procurement Portal (Prototype)</title>
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-    <!-- Tailwind CSS for styling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UMC SemiProcure Nexus - Executive Prototype</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Custom scrollbar and transitions */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        
-        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .tab-content.active { display: block; }
-        
-        /* Specific flex behavior for search tab to center it */
-        #tab-search.active { display: flex; flex-direction: column; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .tooltip { visibility: hidden; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
-        .nav-item:hover .tooltip { visibility: visible; opacity: 1; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        /* 控制主頁面內部滾動條質感 */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 w-screen h-screen flex overflow-hidden font-sans">
+<body class="w-screen h-screen overflow-hidden bg-slate-900 text-slate-100 flex select-none">
 
-    <!-- Sidebar Navigation (Shrunk for more main space) -->
-    <aside class="w-16 bg-slate-900 flex flex-col items-center py-5 shadow-xl z-20 shrink-0">
-        <div class="text-blue-400 text-2xl mb-8"><i class="fa-solid fa-microchip"></i></div>
-        <nav class="flex flex-col gap-4 w-full">
-            <!-- Navigation Items -->
-            <!-- 1. Home / Search -->
-            <button onclick="switchTab('tab-search', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative active-nav text-white bg-slate-800">
-                <i class="fa-solid fa-house text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Home / Search</span>
-            </button>
-            <!-- 2. Pricing DB -->
-            <button onclick="switchTab('tab-pricing', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
-                <i class="fa-solid fa-chart-line text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Pricing DB</span>
-            </button>
-            <!-- 3. SOP -->
-            <button onclick="switchTab('tab-sop', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
-                <i class="fa-solid fa-book-open text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">SOP & Guidelines</span>
-            </button>
-            <!-- 4. Systems -->
-            <button onclick="switchTab('tab-systems', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
-                <i class="fa-solid fa-cubes text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Core Systems</span>
-            </button>
-            <!-- 5. Auto Report -->
-            <button onclick="switchTab('tab-report', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
-                <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Auto Report</span>
-            </button>
-            <!-- 6. Calendar -->
-            <button onclick="switchTab('tab-calendar', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
-                <i class="fa-regular fa-calendar-check text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Schedule</span>
-            </button>
-            <!-- 7. Voice Out -->
-            <button onclick="switchTab('tab-voice', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
-                <i class="fa-regular fa-comments text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Voice Out</span>
-            </button>
-            <!-- 8. Industry News -->
-            <button onclick="switchTab('tab-news', this)" class="nav-item w-full py-3 text-slate-400 hover:text-white hover:bg-slate-800 transition relative">
-                <i class="fa-regular fa-newspaper text-lg"></i>
-                <span class="tooltip absolute left-14 top-3 bg-slate-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">Industry News</span>
-            </button>
-        </nav>
-        <!-- User Profile Icon -->
-        <div class="mt-auto text-slate-500 pb-2">
-            <i class="fa-solid fa-user-circle text-xl hover:text-white cursor-pointer transition"></i>
+    <aside class="w-12 h-full bg-slate-950 flex flex-col justify-between items-center py-3 border-r border-slate-800 shrink-0 z-50">
+        <div class="flex flex-col items-center gap-5 w-full">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-md">
+                U
+            </div>
+            <nav class="flex flex-col items-center gap-1.5 w-full px-1">
+                <button onclick="switchTab('home')" id="nav-home" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-blue-500 bg-slate-800/80 transition-all group relative">
+                    <i class="fa-solid fa-house text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Home / Search</span>
+                </button>
+                <button onclick="switchTab('pricing')" id="nav-pricing" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-chart-pie text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Pricing DB</span>
+                </button>
+                <button onclick="switchTab('report')" id="nav-report" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-file-powerpoint text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Auto Report</span>
+                </button>
+                <button onclick="switchTab('sop')" id="nav-sop" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-book-bookmark text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">SOP & Guidelines</span>
+                </button>
+                <button onclick="switchTab('systems')" id="nav-systems" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-network-wired text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Core Systems</span>
+                </button>
+                <button onclick="switchTab('schedule')" id="nav-schedule" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-calendar-days text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Schedule</span>
+                </button>
+                <button onclick="switchTab('voice')" id="nav-voice" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-comments text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Voice Out</span>
+                </button>
+                <button onclick="switchTab('news')" id="nav-news" class="tab-btn w-8 h-8 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-newspaper text-sm"></i>
+                    <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Industry News</span>
+                </button>
+            </nav>
+        </div>
+        <div class="w-7 h-7 rounded-full bg-slate-850 border border-slate-700 flex items-center justify-center text-slate-400 text-xs group relative cursor-pointer hover:bg-slate-700">
+            <i class="fa-solid fa-user text-[10px]"></i>
+            <span class="absolute left-13 bg-slate-800 text-slate-200 text-[11px] font-medium px-2 py-1 rounded shadow-md whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">UMC Buyer</span>
         </div>
     </aside>
 
-    <!-- Main Content Area (Restricted overflow to prevent random scrolling) -->
-    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden p-8 relative box-border">
+    <main class="flex-1 h-full flex flex-col bg-slate-900 overflow-hidden min-w-0 relative">
 
-        <!-- 1. Smart Assistant (Search) - Centered Design -->
-        <section id="tab-search" class="tab-content active h-full justify-center items-center max-w-3xl mx-auto pb-20">
-            <!-- Hero Title -->
-            <div class="text-center mb-8 w-full transition-all duration-500" id="search-hero">
-                <div class="text-blue-500 text-5xl mb-6"><i class="fa-solid fa-sparkles"></i></div>
-                <h1 class="text-4xl font-bold text-slate-800 mb-2">Procurement Assistant</h1>
-                <p class="text-slate-500">Search for pricing, SOPs, or vendor intelligence</p>
-            </div>
-
-            <!-- Search Bar -->
-            <div class="relative w-full bg-white shadow-md rounded-full flex items-center p-2 mb-8 border border-slate-200 hover:shadow-lg transition">
-                <i class="fa-solid fa-magnifying-glass text-slate-400 ml-4"></i>
-                <input type="text" placeholder="e.g. PO 簽核層級規範為何？ / 整理 Q3 LAM Etch 價格..." class="flex-1 px-4 py-3 outline-none rounded-full text-slate-700 w-full" onkeypress="if(event.key === 'Enter') showSearchResult()">
-                <button onclick="showSearchResult()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-medium transition shrink-0">Ask</button>
-            </div>
-            
-            <!-- Mock Chat Result (Initially Hidden) -->
-            <div id="search-result" class="hidden w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100 animate-[fadeIn_0.5s_ease-in-out]">
-                <div class="flex items-center gap-3 mb-4 border-b border-slate-50 pb-3">
-                    <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0"><i class="fa-solid fa-robot text-sm"></i></div>
-                    <span class="font-semibold text-slate-800">AI Assistant</span>
+        <div id="tab-home" class="content-pane w-full h-full flex flex-col justify-center items-center px-4 md:px-8 overflow-y-auto transition-all duration-300">
+            <div id="home-search-wrapper" class="w-full max-w-xl text-center space-y-5 transition-all duration-300 transform translate-y-0">
+                <h1 class="text-2xl md:text-3xl font-black tracking-tight bg-gradient-to-r from-slate-100 via-blue-100 to-cyan-400 bg-clip-text text-transparent">
+                    UMC SemiProcure Nexus
+                </h1>
+                <p id="home-subtitle" class="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+                    聯電設備採購核心智網 — 整合跨廠報價與 AI 核決輔佐
+                </p>
+                <div class="flex items-center bg-slate-950/90 border border-slate-700/60 rounded-full p-1 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/10 shadow-xl transition-all">
+                    <i class="fa-solid fa-magnifying-glass text-slate-500 ml-3 mr-2 text-xs"></i>
+                    <input type="text" id="ai-search-input" onkeydown="if(event.key === 'Enter') executeAISearch()" placeholder="詢問機台價格、PO簽核層級、或上傳的新數據..." class="w-full bg-transparent border-none outline-none text-slate-200 placeholder-slate-600 text-xs py-1.5">
+                    <button onclick="executeAISearch()" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs px-4 py-1.5 rounded-full transition-all shrink-0">
+                        Ask
+                    </button>
                 </div>
-                <div class="text-slate-600 leading-relaxed space-y-3 pl-11">
-                    <p>根據內部 SOP 與 Pricing DB，為您整理以下資訊：</p>
-                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                        <p class="font-medium text-slate-700 mb-2"><i class="fa-solid fa-file-signature text-blue-500 mr-2"></i>關於 PO 簽核層級（節錄自資產採購 SOP v3.2）：</p>
-                        <ul class="list-disc pl-5 space-y-1 text-sm">
-                            <li><strong>USD 1M 以下</strong>：部級主管 (Director) 簽核。</li>
-                            <li><strong>USD 1M - 10M</strong>：處級主管 (VP) 簽核。</li>
-                            <li><strong>USD 10M 以上</strong>：需呈報 CEO 及 CFO 聯合簽核，並附上 Selection Meeting 決議紀錄。</li>
-                        </ul>
+                <div class="flex flex-wrap justify-center gap-1.5 text-[11px] text-slate-400">
+                    <span class="cursor-pointer hover:text-blue-400 bg-slate-800/40 px-2.5 py-0.5 rounded-full border border-slate-700/50" onclick="quickSearch('PO簽核層級為何？')">💡 PO簽核層級</span>
+                    <span class="cursor-pointer hover:text-blue-400 bg-slate-800/40 px-2.5 py-0.5 rounded-full border border-slate-700/50" onclick="quickSearch('ASML 微影機台過去歷史價格資訊？')">📊 ASML 歷史價格</span>
+                </div>
+            </div>
+
+            <div id="search-results-container" class="w-full max-w-2xl mt-5 bg-slate-950/60 border border-slate-800 rounded-xl p-4 overflow-y-auto hidden max-h-[50vh] space-y-3">
+                <div class="flex items-center gap-1.5 text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+                    <i class="fa-solid fa-robot animate-pulse"></i> Nexus Engine Insights
+                </div>
+                <div id="search-dynamic-content" class="text-xs leading-relaxed text-slate-300 space-y-2"></div>
+            </div>
+        </div>
+
+        <div id="tab-pricing" class="content-pane w-full h-full flex flex-col p-4 md:p-5 hidden overflow-y-auto space-y-4 min-w-0">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3 shrink-0">
+                <div class="min-w-0">
+                    <h2 class="text-base font-bold text-slate-100 tracking-wide uppercase">Pricing DB (機台價格資訊庫)</h2>
+                    <p class="text-[11px] text-slate-400 truncate">跨廠區裝機資本支出與議價指標聯防 (UMC專用)</p>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 p-1.5 rounded-lg text-xs max-w-xs w-full sm:w-auto">
+                    <i class="fa-solid fa-cloud-arrow-up text-blue-500 text-sm ml-1"></i>
+                    <div class="flex-1 min-w-0 text-[11px]">
+                        <p class="font-medium text-slate-300 truncate">上傳機台資料庫</p>
                     </div>
-                    <p class="text-sm text-blue-600 mt-2 cursor-pointer hover:underline inline-block"><i class="fa-solid fa-link mr-1"></i> 開啟完整 SOP 文件 (PR/PO Approval System)</p>
+                    <label class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 px-2.5 py-1 rounded text-[11px] cursor-pointer font-medium transition-all shrink-0">
+                        Browse <input type="file" id="pricing-file-uploader" onchange="handleMockUpload(event)" class="hidden">
+                    </label>
                 </div>
             </div>
-        </section>
 
-        <!-- 2. Pricing DB (Table & Chart) -->
-        <section id="tab-pricing" class="tab-content max-w-6xl mx-auto">
-            <h2 class="text-2xl font-bold mb-6">Equipment Pricing Intelligence</h2>
-            
-            <!-- Filters -->
-            <div class="flex flex-wrap gap-4 mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-                <input type="text" placeholder="Search Vendor / Model..." class="border border-slate-200 rounded-lg px-4 py-2 min-w-[200px] flex-1 focus:outline-none focus:border-blue-400">
-                <select class="border border-slate-200 rounded-lg px-4 py-2 focus:outline-none bg-white"><option>All Sites</option><option>Fab 1</option><option>Fab 2</option></select>
-                <select class="border border-slate-200 rounded-lg px-4 py-2 focus:outline-none bg-white"><option>All Years</option><option>2024</option><option>2023</option></select>
-                <button class="bg-slate-800 text-white px-6 py-2 rounded-lg hover:bg-slate-700 transition">Filter</button>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/40 p-2 rounded-xl border border-slate-800/80 shrink-0">
+                <div>
+                    <label class="block text-[10px] uppercase font-semibold text-slate-500 mb-0.5">Vendor / Model</label>
+                    <input type="text" id="filter-keyword" oninput="filterPricingTable()" placeholder="輸入關鍵字..." class="w-full bg-slate-950 border border-slate-800 text-[11px] rounded px-2 py-1 outline-none focus:border-blue-500 text-slate-200">
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase font-semibold text-slate-500 mb-0.5">Site</label>
+                    <select id="filter-site" onchange="filterPricingTable()" class="w-full bg-slate-950 border border-slate-800 text-[11px] rounded px-2 py-1 outline-none focus:border-blue-500 text-slate-300">
+                        <option value="ALL">All Sites</option>
+                        <option value="Fab 12A">Fab 12A (南科)</option>
+                        <option value="Fab 12i">Fab 12i (新加坡)</option>
+                        <option value="Fab 8F">Fab 8F (竹科)</option>
+                        <option value="Fab 12M">Fab 12M (USJC)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase font-semibold text-slate-500 mb-0.5">Year</label>
+                    <select id="filter-year" onchange="filterPricingTable()" class="w-full bg-slate-950 border border-slate-800 text-[11px] rounded px-2 py-1 outline-none focus:border-blue-500 text-slate-300">
+                        <option value="ALL">All Years</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="resetPricingFilters()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] font-medium py-1 rounded transition-all text-slate-300">
+                        Clear Filters
+                    </button>
+                </div>
             </div>
 
-            <!-- Chart Section -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-6">
-                <h3 class="text-lg font-semibold mb-4 text-slate-700">Cost Saving Analysis (Mock Data: Applied Materials - Centura)</h3>
-                <!-- Ensure chart container doesn't overflow -->
-                <div class="w-full relative" style="height: 300px;">
+            <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-3 shrink-0">
+                <div class="relative h-44 w-full">
                     <canvas id="pricingChart"></canvas>
                 </div>
             </div>
 
-            <!-- Table Section (X-scroll only here if needed) -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden w-full">
+            <div class="bg-slate-950/20 border border-slate-800 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[180px]">
                 <div class="overflow-x-auto w-full">
-                    <table class="w-full text-left text-sm whitespace-nowrap min-w-max">
-                        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
-                            <tr>
-                                <th class="p-4 font-medium">Site</th>
-                                <th class="p-4 font-medium">Entity</th>
-                                <th class="p-4 font-medium">Tool ID</th>
-                                <th class="p-4 font-medium">Vendor</th>
-                                <th class="p-4 font-medium">Model</th>
-                                <th class="p-4 font-medium">Year</th>
-                                <th class="p-4 font-medium">Last PO#</th>
-                                <th class="p-4 font-medium text-right">Price (USD)</th>
-                                <th class="p-4 font-medium text-center">Reference</th>
+                    <table class="w-full text-left border-collapse text-[11px]">
+                        <thead>
+                            <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold whitespace-nowrap">
+                                <th class="p-2.5">Site</th>
+                                <th class="p-2.5">Entity</th>
+                                <th class="p-2.5">Tool ID</th>
+                                <th class="p-2.5">Vendor</th>
+                                <th class="p-2.5">Model</th>
+                                <th class="p-2.5">Year</th>
+                                <th class="p-2.5">PO#</th>
+                                <th class="p-2.5 text-right">Price (TWD)</th>
+                                <th class="p-2.5 text-center">Reference</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-4">Fab 1</td><td class="p-4">Corp A</td><td class="p-4">CVD-01</td><td class="p-4">AMAT</td><td class="p-4">Centura</td><td class="p-4">2024</td><td class="p-4">PO-24001</td><td class="p-4 font-mono text-right">$4,200,000</td>
-                                <td class="p-4 text-center"><a href="#" class="text-blue-600 hover:underline"><i class="fa-solid fa-up-right-from-square"></i> Link</a></td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-4">Fab 2</td><td class="p-4">Corp B</td><td class="p-4">ETCH-05</td><td class="p-4">LAM</td><td class="p-4">Kiyo</td><td class="p-4">2023</td><td class="p-4">PO-23112</td><td class="p-4 font-mono text-right">$3,850,000</td>
-                                <td class="p-4 text-center"><a href="#" class="text-blue-600 hover:underline"><i class="fa-solid fa-up-right-from-square"></i> Link</a></td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-4">Fab 1</td><td class="p-4">Corp A</td><td class="p-4">LITH-02</td><td class="p-4">ASML</td><td class="p-4">NXT:2000i</td><td class="p-4">2024</td><td class="p-4">PO-24089</td><td class="p-4 font-mono text-right">$65,000,000</td>
-                                <td class="p-4 text-center"><a href="#" class="text-blue-600 hover:underline"><i class="fa-solid fa-up-right-from-square"></i> Link</a></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="pricing-table-body" class="divide-y divide-slate-800/50 text-slate-300 whitespace-nowrap">
+                            </tbody>
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- 3. SOP -->
-        <section id="tab-sop" class="tab-content max-w-6xl mx-auto">
-            <h2 class="text-2xl font-bold mb-6">Documentation & SOP</h2>
-            <div class="relative mb-8">
-                <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
-                <input type="text" placeholder="Search keywords (e.g. NDAs, 新人教學)..." class="w-full border border-slate-200 rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-blue-400 shadow-sm">
+        <div id="tab-report" class="content-pane w-full h-full flex flex-col p-4 md:p-5 hidden overflow-y-auto space-y-4">
+            <div class="border-b border-slate-800 pb-3 shrink-0">
+                <h2 class="text-base font-bold text-slate-100 tracking-wide uppercase">Auto Report Generator</h2>
+                <p class="text-[11px] text-slate-400">一鍵智能串聯數據庫，快速生成呈報高階長官簡報</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Cards -->
-                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
-                    <div class="text-blue-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-sitemap"></i></div>
-                    <h3 class="font-bold text-slate-800 mb-2">內部規章</h3>
-                    <p class="text-sm text-slate-500 flex-1">包含採購道德規範、利益迴避條款與稽核流程說明。</p>
-                </a>
-                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
-                    <div class="text-emerald-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-network-wired"></i></div>
-                    <h3 class="font-bold text-slate-800 mb-2">作業 Mind Map</h3>
-                    <p class="text-sm text-slate-500 flex-1">視覺化的機台導入、議價到交貨驗收完整心智圖。</p>
-                </a>
-                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
-                    <div class="text-purple-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-book-journal-whills"></i></div>
-                    <h3 class="font-bold text-slate-800 mb-2">議價教戰手冊</h3>
-                    <p class="text-sm text-slate-500 flex-1">針對各大 Vendor 的談判策略與籌碼分析。</p>
-                </a>
-                <a href="#" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition hover:border-blue-400 group flex flex-col h-full">
-                    <div class="text-orange-500 text-3xl mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <h3 class="font-bold text-slate-800 mb-2">新人手冊</h3>
-                    <p class="text-sm text-slate-500 flex-1">Buyer 必備系統權限申請、術語縮寫表與基礎訓練。</p>
-                </a>
-            </div>
-        </section>
-
-        <!-- 4. Core Systems -->
-        <section id="tab-systems" class="tab-content max-w-6xl mx-auto">
-            <h2 class="text-2xl font-bold mb-6">Quick Links to Core Systems</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" alt="SAP" class="h-10 object-contain mb-3 opacity-80">
-                    <span class="font-semibold text-slate-700">SAP ERP</span>
-                </a>
-                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
-                    <i class="fa-solid fa-file-signature text-4xl mb-3 text-blue-500"></i>
-                    <span class="font-semibold text-sm text-center">PR / PO Approval</span>
-                </a>
-                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
-                    <i class="fa-solid fa-cloud-arrow-up text-4xl mb-3 text-sky-500"></i>
-                    <span class="font-semibold text-sm text-center">EP System</span>
-                </a>
-                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
-                    <i class="fa-solid fa-file-contract text-4xl mb-3 text-emerald-500"></i>
-                    <span class="font-semibold text-sm text-center">NDA Gateway</span>
-                </a>
-                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
-                    <i class="fa-solid fa-server text-4xl mb-3 text-purple-500"></i>
-                    <span class="font-semibold text-sm text-center">資產系統</span>
-                </a>
-                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
-                    <i class="fa-solid fa-folder-open text-4xl mb-3 text-amber-500"></i>
-                    <span class="font-semibold text-sm text-center">OS Document</span>
-                </a>
-                <a href="#" class="flex flex-col items-center justify-center p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:bg-slate-50 hover:-translate-y-1 transition duration-200 text-slate-600">
-                    <i class="fa-solid fa-database text-4xl mb-3 text-rose-500"></i>
-                    <span class="font-semibold text-sm text-center">Pricing DB</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- 5. Auto Report -->
-        <section id="tab-report" class="tab-content max-w-3xl mx-auto">
-            <h2 class="text-2xl font-bold mb-6 text-center">AI Report Generator</h2>
-            <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
-                <div class="mb-5">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Target Audience (報告對象)</label>
-                    <select class="w-full border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-400 bg-white">
-                        <option>Executive Team (CEO/CFO/VP)</option>
-                        <option>Fab Directors / Managers</option>
-                        <option>Internal Procurement Team</option>
+            <div class="max-w-xl bg-slate-950/50 border border-slate-800 rounded-xl p-5 space-y-4 mx-auto w-full shadow-lg">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Report Target (報告對象)</label>
+                    <select id="report-target" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 outline-none">
+                        <option value="採購處副總 (VP of Procurement)">採購處副總 (VP of Procurement)</option>
+                        <option value="Fab 12A 廠長 (Fab 12A Plant Director)">Fab 12A 廠長 (Fab 12A Plant Director)</option>
+                        <option value="資深財務長 (CFO)">資深財務長 (CFO)</option>
                     </select>
                 </div>
-                <div class="mb-5">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Report Context & Key Points (報告內容與重點)</label>
-                    <textarea rows="5" placeholder="例如：請幫我整理 Q3 LAM Etch 機台的議價成果，強調透過 bundling 拿到的 5% extra discount..." class="w-full border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-400 resize-none"></textarea>
-                </div>
-                <button onclick="generateReport(this)" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition">
-                    <i class="fa-solid fa-file-powerpoint mr-2"></i> Generate PPTX
-                </button>
-                <div id="loading-report" class="hidden text-center mt-4 text-slate-500">
-                    <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500 mb-2"></i>
-                    <p class="text-sm">Retrieving data & building slides...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. Calendar -->
-        <section id="tab-calendar" class="tab-content max-w-6xl mx-auto">
-            <div class="flex justify-between items-end mb-6">
-                <h2 class="text-2xl font-bold">Buyer Routine Schedule</h2>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"><i class="fa-solid fa-plus mr-1"></i> Add Event</button>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Weekly Tasks -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 font-bold text-slate-700"><i class="fa-solid fa-calendar-week mr-2 text-blue-500"></i> Weekly Routines</div>
-                    <ul class="divide-y divide-slate-100">
-                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
-                            <div><span class="inline-block w-16 text-xs font-bold text-slate-400">MON PM</span><span class="font-medium text-slate-800">2nd Source Meeting</span></div>
-                            <i class="fa-regular fa-bell text-slate-300 hover:text-blue-500 cursor-pointer"></i>
-                        </li>
-                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
-                            <div><span class="inline-block w-16 text-xs font-bold text-slate-400">TUE PM</span><span class="font-medium text-slate-800">Department Weekly Meeting</span></div>
-                            <i class="fa-regular fa-bell text-slate-300 hover:text-blue-500 cursor-pointer"></i>
-                        </li>
-                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
-                            <div><span class="inline-block w-16 text-xs font-bold text-slate-400 border border-red-200 text-red-500 px-1 rounded text-center bg-red-50">THU</span> <span class="font-medium text-slate-800">交期更新 (Delivery Update)</span></div>
-                            <i class="fa-solid fa-bell text-amber-400 cursor-pointer" title="Reminder Active"></i>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Monthly/Quarterly Tasks -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 font-bold text-slate-700"><i class="fa-solid fa-calendar-days mr-2 text-emerald-500"></i> Periodic Routines</div>
-                    <ul class="divide-y divide-slate-100">
-                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
-                            <div><span class="inline-block w-20 px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded mr-3 text-center">Monthly</span><span class="font-medium text-slate-800">PO Status Update</span></div>
-                        </li>
-                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
-                            <div><span class="inline-block w-20 px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded mr-3 text-center">Quarterly</span><span class="font-medium text-slate-800">Lead Time & Vendor Loading</span></div>
-                        </li>
-                        <li class="p-4 flex items-center justify-between hover:bg-slate-50 transition">
-                            <div><span class="inline-block w-20 px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded mr-3 text-center">Biannual</span><span class="font-medium text-slate-800">Vendor Credit Survey</span></div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. Voice Out -->
-        <section id="tab-voice" class="tab-content max-w-5xl mx-auto">
-            <h2 class="text-2xl font-bold mb-6">Voice Out / Bulletin Board</h2>
-            
-            <!-- Create Post -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
-                <textarea rows="3" placeholder="抒發一下心情，或是分享工作上的心得..." class="w-full border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-400 resize-none mb-4"></textarea>
-                <div class="flex justify-between items-center">
-                    <label class="flex items-center text-sm text-slate-600 cursor-pointer">
-                        <input type="checkbox" class="mr-2 h-4 w-4 text-blue-600 rounded" checked> Post Anonymously (匿名發文)
-                    </label>
-                    <button class="bg-slate-800 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition">Post</button>
-                </div>
-            </div>
-
-            <!-- Feed -->
-            <div class="space-y-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex gap-4">
-                    <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 shrink-0"><i class="fa-solid fa-user-secret"></i></div>
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-bold text-slate-700">Anonymous</span>
-                            <span class="text-xs text-slate-400">2 hours ago</span>
-                        </div>
-                        <p class="text-slate-600 text-sm">最近某 A 開頭的美商交期一直 delay，打電話去催還一直推給零件商，大家有遇到一樣的狀況嗎？到底該怎麼壓他們交期啊心好累 😫</p>
-                        <div class="mt-3 flex gap-4 text-slate-400 text-sm">
-                            <button class="hover:text-blue-500 transition"><i class="fa-regular fa-thumbs-up"></i> 12</button>
-                            <button class="hover:text-blue-500 transition"><i class="fa-regular fa-comment"></i> 4 Comments</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex gap-4">
-                    <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 font-bold">J</div>
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-bold text-slate-700">Jason Chen (Real Name)</span>
-                            <span class="text-xs text-slate-400">Yesterday</span>
-                        </div>
-                        <p class="text-slate-600 text-sm">分享一下，這季跟日系設備商談判時，可以多利用近期匯率走勢來做籌碼，今天剛成功把某個 Spare parts 的合約價格談下來 5%，大家可以試試看！</p>
-                        <div class="mt-3 flex gap-4 text-slate-400 text-sm">
-                            <button class="text-blue-500"><i class="fa-solid fa-thumbs-up"></i> 34</button>
-                            <button class="hover:text-blue-500 transition"><i class="fa-regular fa-comment"></i> 1 Comment</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. Industry News -->
-        <section id="tab-news" class="tab-content max-w-5xl mx-auto">
-            <div class="flex justify-between items-end mb-6">
                 <div>
-                    <h2 class="text-2xl font-bold mb-1">Weekly Industry Insights</h2>
-                    <p class="text-slate-500 text-sm">Curated by Procurement Experts</p>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Report Key Focus / Prompt (提示詞與重點)</label>
+                    <textarea id="report-prompt" rows="3" placeholder="例如：摘要 2025-2026 ASML 設備降幅成果，強調南科廠區貢獻並對比 2nd Source 進度..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 outline-none placeholder-slate-600 resize-none"></textarea>
                 </div>
-                <select class="border border-slate-200 rounded-lg px-3 py-1 text-sm focus:outline-none bg-white"><option>All Categories</option><option>Equipment</option><option>Raw Materials</option></select>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- News Item -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition">
-                    <div class="bg-slate-800 text-white text-xs font-bold px-3 py-1 uppercase tracking-wider w-max m-4 rounded">Equipment</div>
-                    <div class="px-6 pb-4 flex-1 flex flex-col">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">ASML 預計 2025 年 High-NA EUV 出貨量將翻倍</h3>
-                        <p class="text-slate-600 text-sm mb-4 line-clamp-3">
-                            【顧問點評】這意味著先進製程的機台搶奪戰將提早白熱化。建議 Buyer 在評估 2nm 以下製程的建廠需求時，需提早至少 18 個月向 ASML 鎖定產能。
-                        </p>
-                        <div class="mt-auto border-t border-slate-100 pt-3 flex justify-between items-center text-sm">
-                            <span class="text-slate-400">Oct 24, 2024</span>
-                            <a href="#" class="text-blue-600 hover:underline">Source: SemiMedia <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a>
-                        </div>
-                    </div>
+                <button onclick="triggerReportGeneration()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-2 rounded-lg transition-all shadow-md flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate PPTX Report
+                </button>
+                <div id="report-loading-overlay" class="hidden bg-slate-900 border border-slate-800 rounded-lg p-3 flex flex-col items-center justify-center space-y-2">
+                    <div class="w-6 h-6 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p id="report-status-text" class="text-[11px] text-slate-400 font-medium">正在彙整 Pricing DB 與內規核決條款...</p>
                 </div>
-
-                <!-- News Item -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col hover:shadow-md transition">
-                    <div class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-wider w-max m-4 rounded">Raw Materials</div>
-                    <div class="px-6 pb-4 flex-1 flex flex-col">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">日本信越化學宣布擴建光阻劑產線，預計緩解供應緊繃</h3>
-                        <p class="text-slate-600 text-sm mb-4 line-clamp-3">
-                            【顧問點評】光阻劑過去半年的 lead time 嚴重拉長，Buyer 可以在下個月的 QBR 中，要求當地代理商提供最新的 allocations 計畫。
-                        </p>
-                        <div class="mt-auto border-t border-slate-100 pt-3 flex justify-between items-center text-sm">
-                            <span class="text-slate-400">Oct 22, 2024</span>
-                            <a href="#" class="text-blue-600 hover:underline">Source: EE Times <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i></a>
-                        </div>
+                <div id="report-success-box" class="hidden bg-emerald-950/30 border border-emerald-800/50 rounded-lg p-3 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-base shrink-0"></i>
+                    <div>
+                        <h4 class="text-xs font-bold text-emerald-400">簡報生成成功 (PPTX Generated)</h4>
+                        <p class="text-[10px] text-slate-400">已成功套用 UMC 內核規範，檔案已打包準備匯出展示。</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <div id="tab-sop" class="content-pane w-full h-full flex flex-col p-4 md:p-5 hidden overflow-y-auto space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3 shrink-0">
+                <div>
+                    <h2 class="text-base font-bold text-slate-100 tracking-wide uppercase">SOP & Guidelines (內規與教戰手冊)</h2>
+                    <p class="text-[11px] text-slate-400">秒查內部請購法規規範與獨佔供應商談判策略</p>
+                </div>
+                <div class="relative w-full sm:w-48 shrink-0">
+                    <i class="fa-solid fa-magnifying-glass absolute left-2 top-2 text-slate-500 text-[10px]"></i>
+                    <input type="text" id="sop-search-input" oninput="filterSOPCards()" placeholder="搜尋關鍵字..." class="w-full bg-slate-950 border border-slate-800 rounded pl-6 pr-2 py-1 text-[11px] outline-none focus:border-blue-500 text-slate-200">
+                </div>
+            </div>
+            <div id="sop-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="sop-card bg-slate-950/40 border border-slate-800 rounded-xl p-3 hover:border-slate-700 transition-all cursor-pointer flex flex-col justify-between" onclick="alert('開啟文件：聯電核決權限明細規範')">
+                    <div class="space-y-1.5">
+                        <div class="w-7 h-7 rounded bg-blue-500/10 flex items-center justify-center text-blue-400 text-xs"><i class="fa-solid fa-gavel"></i></div>
+                        <h3 class="text-xs font-bold text-slate-200 card-title">內部採購規章</h3>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">內含最新資本支出、機台採購核決權限層級與 PO 簽核控制鏈。</p>
+                    </div>
+                    <span class="text-[10px] text-blue-500 font-medium pt-3 block">Ref: UMC-SOP-PROC-02</span>
+                </div>
+                <div class="sop-card bg-slate-950/40 border border-slate-800 rounded-xl p-3 hover:border-slate-700 transition-all cursor-pointer flex flex-col justify-between" onclick="alert('開啟文件：採購端到端流程圖')">
+                    <div class="space-y-1.5">
+                        <div class="w-7 h-7 rounded bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-xs"><i class="fa-solid fa-sitemap"></i></div>
+                        <h3 class="text-xs font-bold text-slate-200 card-title">作業 Mind Map</h3>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">視覺化全方位流程：從 PR 需求會簽、Selection Meeting 到發放 PO。</p>
+                    </div>
+                    <span class="text-[10px] text-cyan-500 font-medium pt-3 block">Ref: UMC-MAP-EQ-01</span>
+                </div>
+                <div class="sop-card bg-slate-950/40 border border-slate-800 rounded-xl p-3 hover:border-slate-700 transition-all cursor-pointer flex flex-col justify-between" onclick="alert('開啟文件：大廠談判抗衡策略')">
+                    <div class="space-y-1.5">
+                        <div class="w-7 h-7 rounded bg-amber-500/10 flex items-center justify-center text-amber-400 text-xs"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h3 class="text-xs font-bold text-slate-200 card-title">議價教戰手冊</h3>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">反制寡占原廠綁標、年費索求硬踩價之談判籌碼與匯率避險加註對策。</p>
+                    </div>
+                    <span class="text-[10px] text-amber-500 font-medium pt-3 block">Ref: UMC-NEG-PLAYBOOK</span>
+                </div>
+                <div class="sop-card bg-slate-950/40 border border-slate-800 rounded-xl p-3 hover:border-slate-700 transition-all cursor-pointer flex flex-col justify-between" onclick="alert('開啟文件：採購新人指南')">
+                    <div class="space-y-1.5">
+                        <div class="w-7 h-7 rounded bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-xs"><i class="fa-solid fa-id-card"></i></div>
+                        <h3 class="text-xs font-bold text-slate-200 card-title">新人手冊 (Onboarding)</h3>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">快速上手基礎半導體設備專有名詞、常用縮寫與廠區聯繫窗口。</p>
+                    </div>
+                    <span class="text-[10px] text-indigo-500 font-medium pt-3 block">Ref: UMC-GUIDE-NEWBIE</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-systems" class="content-pane w-full h-full flex flex-col p-4 md:p-5 hidden overflow-y-auto space-y-4">
+            <div class="border-b border-slate-800 pb-3 shrink-0">
+                <h2 class="text-base font-bold text-slate-100 tracking-wide uppercase">Core Systems Portal (常用系統入口)</h2>
+                <p class="text-[11px] text-slate-400">一鍵跨入設備採購日常高度相依之系統內部工作站</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <a href="#" onclick="alert('導向: PR/PO 簽核系統')" class="flex flex-col items-center justify-center p-3.5 bg-slate-950/40 border border-slate-800 rounded-xl hover:border-blue-500/40 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-lg bg-blue-600/10 flex items-center justify-center text-blue-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-file-signature text-base"></i></div>
+                    <span class="text-xs font-bold text-slate-200">PR/PO Approval</span>
+                </a>
+                <a href="#" onclick="alert('導向: EP 電子採購網')" class="flex flex-col items-center justify-center p-3.5 bg-slate-950/40 border border-slate-800 rounded-xl hover:border-cyan-500/40 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-lg bg-cyan-600/10 flex items-center justify-center text-cyan-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-cart-flatbed-suitcases text-base"></i></div>
+                    <span class="text-xs font-bold text-slate-200">EP System</span>
+                </a>
+                <a href="#" onclick="alert('導向: SAP 系統')" class="flex flex-col items-center justify-center p-3.5 bg-slate-950/40 border border-slate-800 rounded-xl hover:border-amber-500/40 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-lg bg-amber-600/10 flex items-center justify-center text-amber-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-cubes text-base"></i></div>
+                    <span class="text-xs font-bold text-slate-200">SAP ERP</span>
+                </a>
+                <a href="#" onclick="alert('導向: NDA 法務法規系統')" class="flex flex-col items-center justify-center p-3.5 bg-slate-950/40 border border-slate-800 rounded-xl hover:border-red-500/40 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-lg bg-red-600/10 flex items-center justify-center text-red-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-user-shield text-base"></i></div>
+                    <span class="text-xs font-bold text-slate-200">NDA System</span>
+                </a>
+                <a href="#" onclick="alert('導向: 固定資產管控系統')" class="flex flex-col items-center justify-center p-3.5 bg-slate-950/40 border border-slate-800 rounded-xl hover:border-emerald-500/40 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-600/10 flex items-center justify-center text-emerald-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-vault text-base"></i></div>
+                    <span class="text-xs font-bold text-slate-200">資產系統</span>
+                </a>
+                <button onclick="switchTab('pricing')" class="flex flex-col items-center justify-center p-3.5 bg-slate-950/40 border border-slate-800 rounded-xl hover:border-indigo-500/40 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-600/10 flex items-center justify-center text-indigo-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-coins text-base"></i></div>
+                    <span class="text-xs font-bold text-slate-200">Pricing DB</span>
+                </button>
+                <a href="#" onclick="alert('導向: 進口通關文件庫')" class="flex flex-col items-center justify-center p-3.5 bg-slate-950/40 border border-slate-800 rounded-xl hover:border-teal-500/40 transition-all text-center group">
+                    <div class="w-10 h-10 rounded-lg bg-teal-600/10 flex items-center justify-center text-teal-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-ship text-base"></i></div>
+                    <span class="text-xs font-bold text-slate-200">OS Document</span>
+                </a>
+            </div>
+        </div>
+
+        <div id="tab-schedule" class="content-pane w-full h-full flex flex-col p-4 md:p-5 hidden overflow-hidden space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3 shrink-0">
+                <div>
+                    <h2 class="text-base font-bold text-slate-100 tracking-wide uppercase">Schedule (採購行事曆)</h2>
+                    <p class="text-[11px] text-slate-400">Buyer 例行週期與重大交期追蹤面板</p>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <button class="w-7 h-7 rounded bg-slate-950 border border-slate-800 text-amber-400 flex items-center justify-center text-xs relative" onclick="alert('當前無緊急交期異常警報通知！')">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="absolute top-1 right-1.5 w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                    </button>
+                    <button onclick="toggleEventModal(true)" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-2.5 py-1.5 rounded transition-all flex items-center gap-1 shadow-md">
+                        <i class="fa-solid fa-plus text-[10px]"></i> Add Event
+                    </button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 overflow-hidden">
+                <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-3 flex flex-col min-h-0">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-blue-400 mb-2 flex items-center gap-1 shrink-0"><i class="fa-solid fa-repeat"></i> Weekly Routine Tasks (每週例行)</h3>
+                    <div id="weekly-events-list" class="space-y-1.5 overflow-y-auto flex-1 min-h-0 pr-1"></div>
+                </div>
+                <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-3 flex flex-col min-h-0">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-cyan-400 mb-2 flex items-center gap-1 shrink-0"><i class="fa-solid fa-hourglass-half"></i> Periodic Milestones (週期任務)</h3>
+                    <div id="periodic-events-list" class="space-y-1.5 overflow-y-auto flex-1 min-h-0 pr-1"></div>
+                </div>
+            </div>
+
+            <div id="event-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div class="bg-slate-950 border border-slate-800 rounded-xl max-w-xs w-full p-4 space-y-3.5 shadow-2xl">
+                    <h4 class="text-xs font-bold text-slate-100 uppercase tracking-wide flex items-center gap-1"><i class="fa-solid fa-calendar-plus text-blue-500"></i> 管理採購任務</h4>
+                    <div class="space-y-2 text-[11px]">
+                        <div>
+                            <label class="block text-slate-400 mb-0.5">分類</label>
+                            <select id="event-type" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-slate-200 outline-none">
+                                <option value="Weekly">每週例行任務</option>
+                                <option value="Periodic">週期性 / 特殊日程</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-0.5">時間點</label>
+                            <input type="text" id="event-time" placeholder="例如：星期五 AM / 每月10日" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-slate-200 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-0.5">任務說明</label>
+                            <input type="text" id="event-title" placeholder="例如：AMAT 關鍵零組件交期更新確認" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-slate-200 outline-none">
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-1.5 text-[11px]">
+                        <button onclick="toggleEventModal(false)" class="bg-slate-800 text-slate-400 px-2.5 py-1 rounded hover:bg-slate-700">Cancel</button>
+                        <button onclick="submitNewEvent()" class="bg-blue-600 text-white px-2.5 py-1 rounded hover:bg-blue-500 font-semibold">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-voice" class="content-pane w-full h-full flex flex-col p-4 md:p-5 hidden overflow-hidden space-y-3">
+            <div class="border-b border-slate-800 pb-2 shrink-0">
+                <h2 class="text-base font-bold text-slate-100 tracking-wide uppercase">Voice Out (我有話要說)</h2>
+                <p class="text-[11px] text-slate-400">匿名交流前線八卦與談判踩價實戰心得</p>
+            </div>
+            <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-3 shrink-0 space-y-2">
+                <textarea id="forum-input" rows="2" placeholder="在此輸入想和大家分享的事情...（如原廠產線異常、避險合約漏洞等）" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 outline-none focus:border-blue-500 placeholder-slate-600 resize-none"></textarea>
+                <div class="flex justify-between items-center text-[11px]">
+                    <label class="flex items-center gap-1 text-slate-400 cursor-pointer select-none">
+                        <input type="checkbox" id="forum-anonymous" class="rounded bg-slate-900 border-slate-700 accent-blue-600">
+                        <span>Post Anonymously (匿名發表)</span>
+                    </label>
+                    <button onclick="submitForumPost()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1.5 rounded-md transition-all shadow-md">
+                        Publish
+                    </button>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto pr-1">
+                <div id="forum-posts-feed" class="space-y-2 max-w-2xl mx-auto w-full pb-2"></div>
+            </div>
+        </div>
+
+        <div id="tab-news" class="content-pane w-full h-full flex flex-col p-4 md:p-5 hidden overflow-y-auto space-y-3">
+            <div class="border-b border-slate-800 pb-2 shrink-0">
+                <h2 class="text-base font-bold text-slate-100 tracking-wide uppercase">Industry News (半導體產業新聞樞紐)</h2>
+                <p class="text-[11px] text-slate-400">掌握外部供應鏈波動，與內部顧問策略拆解指標</p>
+            </div>
+            <div id="news-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
 
     </main>
 
-    <!-- Script logic -->
     <script>
-        // Search bar reveal logic for the first tab
-        function showSearchResult() {
-            const resultBox = document.getElementById('search-result');
-            const heroText = document.getElementById('search-hero');
-            
-            // Show result
-            resultBox.classList.remove('hidden');
-            // Shrink hero text to make room
-            heroText.classList.add('scale-90', 'opacity-80', 'mb-2');
-            heroText.classList.remove('mb-8');
-        }
+        const state = {
+            activeTab: 'home',
+            pricingData: [
+                { site: 'Fab 12A', entity: '聯電總部', toolId: 'PH-LITH-001', vendor: 'ASML', model: 'Twinscan NXT:2000i', year: '2025', poNum: 'PO-2025-0812', price: 2850000000, link: '#', inc: 4.5, pDown: 6.2, saving: 10.7 },
+                { site: 'Fab 12i', entity: '聯電新加坡', toolId: 'TF-CVD-004', vendor: 'AMAT', model: 'Producer CVD', year: '2025', poNum: 'PO-2025-0941', price: 180000000, link: '#', inc: 3.0, pDown: 5.0, saving: 8.0 },
+                { site: 'Fab 8F', entity: '聯電竹科', toolId: 'ET-DRY-012', vendor: 'TEL', model: 'Tactras Etcher', year: '2024', poNum: 'PO-2024-1104', price: 220000000, link: '#', inc: 2.5, pDown: 4.8, saving: 7.3 },
+                { site: 'Fab 12M', entity: '日本USJC', toolId: 'PH-LITH-005', vendor: 'ASML', model: 'Twinscan NXT:1980Di', year: '2024', poNum: 'PO-2024-0322', price: 1950000000, link: '#', inc: 5.0, pDown: 3.5, saving: 8.5 },
+                { site: 'Fab 12A', entity: '聯電總部', toolId: 'TF-ALD-009', vendor: 'Lam Research', model: 'Altus CVD', year: '2026', poNum: 'PO-2026-0105', price: 165000000, link: '#', inc: 4.0, pDown: 5.5, saving: 9.5 }
+            ],
+            scheduleEvents: [
+                { id: 1, type: 'Weekly', time: '週一 PM', title: '2nd source meeting (第二供應商開發進度與品質考核評估會議)', isSystem: true },
+                { id: 2, type: 'Weekly', time: '週二 PM', title: '採購處部門週會 (匯報跨廠裝機預算與大廠調價情資分享)', isSystem: true },
+                { id: 3, type: 'Weekly', time: '週四', title: '交期更新 (Delivery Update - 全球缺料風險與缺口盤點追蹤)', isSystem: true },
+                { id: 4, type: 'Periodic', time: '每月', title: 'PO status update (月底未結案訂單流轉追蹤審查)', isSystem: true },
+                { id: 5, type: 'Periodic', time: '每季', title: 'Lead time & Key vendor loading (核心機台交期動態產能普查)', isSystem: true },
+                { id: 6, type: 'Periodic', time: '每半年', title: 'Vendor credit survey (關鍵策略大廠財報徵信與經營斷鏈風險控管)', isSystem: true }
+            ],
+            forumPosts: [
+                { id: 1, user: '匿名 Buyer', isAnon: true, time: '2小時前', content: '某日系零件原廠交期無預警推遲3個月，無塵室急跳腳！有人手上有相容複數廠區備品能先調撥支援嗎？救命！', likes: 12, comments: 4 },
+                { id: 2, user: '王大明 (資深副理)', isAnon: false, time: '昨天', content: '【實戰分享】近期日圓及歐元波動劇烈，與歐美獨占巨頭談合約時，務必在條款強制加入「FX匯率避險聯動回饋條款」。我們團隊上週利用此底牌成功在 Selection Meeting 把報價硬生生壓下 5%！', likes: 45, comments: 11 }
+            ],
+            newsData: [
+                { id: 1, title: 'ASML 宣布其高階 DUV 微影機台關鍵光學組件缺料，下半年交期恐再延長 4～6 個月', category: 'Equipment', tag: '廠務設備', source: '#', insight: '【採購因應對策】成熟製程擴產首當其衝。設備 Buyer 應立即鎖定南科 Fab 12A 與日本 USJC 的裝機排程應變，嚴抓原廠凍結合約報價，不可隨缺料起舞。同時加速推進翻修零組件的 2nd Source 在地化替代認證流程。' },
+                { id: 2, title: '全球特殊電子氣體原料核心產區突發物流卡關，高純度 NF3、WF6 供應趨緊', category: 'Materials', tag: '原材料', source: '#', insight: '【採購因應對策】目前廠內存水準安全，但新加坡 Fab 12i 具潛在威脅。建議原材料 Buyer 火速啟動「雙供應商(Dual Source)綑綁招標分流機制」，拉高亞太在地化特氣廠供應配額，避免將籌碼單一化。' }
+            ]
+        };
 
-        // Tab switching logic
-        function switchTab(tabId, element) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.remove('active');
-            });
-            // Remove active state from all nav buttons
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('text-white', 'bg-slate-800');
-                el.classList.add('text-slate-400');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabId).classList.add('active');
-            
-            // Add active state to clicked button
-            element.classList.remove('text-slate-400');
-            element.classList.add('text-white', 'bg-slate-800');
+        let myChartInstance = null;
 
-            // Render chart if Pricing tab is opened
-            if(tabId === 'tab-pricing' && !window.pricingChartRendered) {
-                renderChart();
-                window.pricingChartRendered = true;
+        document.addEventListener("DOMContentLoaded", () => {
+            renderPricingTable();
+            renderPricingChart();
+            renderSchedule();
+            renderForum();
+            renderNews();
+        });
+
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+            document.querySelectorAll('.content-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-blue-500', 'bg-slate-800/80');
+                btn.classList.add('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800');
+            });
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800');
+                activeBtn.classList.add('text-blue-500', 'bg-slate-800/80');
+            }
+
+            if (tabId === 'home') {
+                const wrapper = document.getElementById('home-search-wrapper');
+                const results = document.getElementById('search-results-container');
+                wrapper.classList.remove('-translate-y-4', 'mt-2');
+                wrapper.classList.add('translate-y-0');
+                results.classList.add('hidden');
+                document.getElementById('ai-search-input').value = '';
+            } else if (tabId === 'pricing') {
+                setTimeout(() => { if (myChartInstance) myChartInstance.update(); }, 20);
             }
         }
 
-        // Mock Report Generator simulation
-        function generateReport(btn) {
-            const loading = document.getElementById('loading-report');
-            const originalHTML = btn.innerHTML;
-            
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-            loading.classList.remove('hidden');
-            
-            // Simulate 2 seconds loading
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                btn.classList.remove('opacity-50');
-                btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Report Downloaded';
-                btn.classList.replace('from-blue-600', 'from-emerald-500');
-                btn.classList.replace('to-indigo-600', 'to-emerald-600');
-                
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
-                    btn.classList.replace('from-emerald-500', 'from-blue-600');
-                    btn.classList.replace('to-emerald-600', 'to-indigo-600');
-                }, 3000);
-            }, 2000);
+        // ==========================================
+        // HOME / AI SEARCH ENGINE LINKING LOGIC
+        // ==========================================
+        function quickSearch(text) {
+            document.getElementById('ai-search-input').value = text;
+            executeAISearch();
         }
 
-        // Chart.js rendering for Pricing DB (Mixed Chart: Bar + Lines)
-        function renderChart() {
+        function executeAISearch() {
+            const query = document.getElementById('ai-search-input').value.trim();
+            if (!query) return;
+
+            const wrapper = document.getElementById('home-search-wrapper');
+            const resultsPane = document.getElementById('search-results-container');
+            
+            wrapper.classList.remove('translate-y-0');
+            wrapper.classList.add('-translate-y-4', 'mt-2');
+            resultsPane.classList.remove('hidden');
+
+            const contentDiv = document.getElementById('search-dynamic-content');
+            contentDiv.innerHTML = `<div class="text-[11px] text-slate-500 py-1 flex items-center gap-1"><i class="fa-solid fa-spinner animate-spin"></i> Nexus AI正在交叉檢索採購手冊與實時 Pricing DB 上傳數據...</div>`;
+
+            setTimeout(() => {
+                let html = '';
+                const q = query.toLowerCase();
+
+                if (q.includes('核決') || q.includes('簽核') || q.includes('層級') || q.includes('po')) {
+                    html = `
+                        <p class="font-semibold text-slate-200">依據規範文件 <span class="text-blue-400 underline cursor-pointer">【UMC-SOP-PROC-02 核決權限明細規範】</span> 歸納請購簽核層級：</p>
+                        <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-400 pl-1">
+                            <li><strong class="text-slate-300">常規零組件 &lt; 新台幣 1,000 萬元：</strong> 採購處二級主管（經理/課長）決行。</li>
+                            <li><strong class="text-slate-300">核心核心設備 新台幣 1,000 萬 ～ 5,000 萬元：</strong> 會簽會計單位，經採購處一級主管簽核決行。</li>
+                            <li><strong class="text-slate-300">天價半導體製程機台 &gt; 新台幣 5,000 萬元：</strong> 須由跨部門評選小組召開 <span class="text-cyan-400 font-medium">Selection Meeting</span> 決議，呈報聯電共同總經理決行。</li>
+                        </ul>
+                        <div class="p-2 bg-slate-900/80 border border-slate-800 rounded text-[11px] flex justify-between items-center mt-1">
+                            <span class="text-slate-500"><i class="fa-solid fa-file-lines text-red-400"></i> UMC-SOP-PROC-02_v4.pdf</span>
+                            <a href="#" onclick="alert('進入PR/PO常規請購系統')" class="text-blue-400 hover:underline">進入簽核工作流 &rarr;</a>
+                        </div>
+                    `;
+                } else if (q.includes('asml') || q.includes('價格') || q.includes('機台') || q.includes('微影') || q.includes('price')) {
+                    let matched = state.pricingData.filter(d => d.vendor.toLowerCase().includes('asml') || d.model.toLowerCase().includes('asml') || q.includes(d.model.toLowerCase()));
+                    if (matched.length > 0) {
+                        html = `
+                            <p class="font-semibold text-slate-200">AI 成功從最新連動的 <span class="text-cyan-400">Pricing DB 資料庫</span> 檢索出 ${matched.length} 筆天價機台報價參照：</p>
+                            <div class="space-y-1.5 pt-1">
+                        `;
+                        matched.forEach(m => {
+                            html += `
+                                <div class="bg-slate-900 border border-slate-800 rounded p-2 text-[11px] flex justify-between items-center">
+                                    <div>
+                                        <span class="font-medium text-slate-200">📍 ${m.site} (${m.entity}) — ${m.vendor} ${m.model}</span>
+                                        <p class="text-[10px] text-slate-500">PO單號: ${m.poNum} | 歸檔年份: ${m.year} | Price Down: <span class="text-emerald-400">↓${m.pDown}%</span></p>
+                                    </div>
+                                    <span class="font-bold text-amber-400 whitespace-nowrap">NT$ ${m.price.toLocaleString()}</span>
+                                </div>
+                            `;
+                        });
+                        html += `</div><p class="text-[10px] text-slate-400 mt-1">💡 <strong class="text-slate-300">AI談判參照觀點：</strong> 歷史資料顯示綑綁複數廠區（如台南12A與日本USJC）合併招標採購，能有效向獨占原廠逼出更高的綜合 Saving。建議沿用此防禦模式。</p>`;
+                    } else {
+                        html = `<p class="text-[11px] text-slate-400">未查到相關原廠設備資訊。請嘗試在 Pricing DB 頁面點選 "Browse" 上傳全新機台清單後再行連動查詢。</p>`;
+                    }
+                } else {
+                    html = `<p class="text-[11px] text-slate-400">您好！我是 Nexus 採購助手。為了完美展現跨功能大腦的實力，建議點選搜尋框下方的快速快捷推薦，即刻測試與核心資料庫的實時數據交叉連動！</p>`;
+                }
+                contentDiv.innerHTML = html;
+            }, 500);
+        }
+
+        // ==========================================
+        // PRICING DB DATA BINDING & INTERACTION
+        // ==========================================
+        function handleMockUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            alert(`【長官報告情境模擬】\n檔案 [${file.name}] 即時解析完成！\n資料庫成功匯入一筆最核心新世代機台：\n-> ASML Twinscan EXE:5000 (Fab 12A, NT$ 4,850,000,000)`);
+            
+            state.pricingData.unshift({
+                site: 'Fab 12A', entity: '聯電總部', toolId: 'PH-EUV-000', vendor: 'ASML', model: 'Twinscan EXE:5000', year: '2026', poNum: 'PO-2026-NEXUS', price: 4850000000, link: '#', inc: 6.0, pDown: 8.5, saving: 14.5
+            });
+
+            renderPricingTable();
+            renderPricingChart();
+            
+            document.getElementById('ai-search-input').value = 'Twinscan EXE:5000';
+            alert(`【連動成功提示】\n數據已完全寫入知識庫庫底層！\n系統已自動為您填入關鍵字，現在您可以回首頁(Home)直接按下 "Ask" 大秀與剛上傳檔案的動態連動！`);
+        }
+
+        function renderPricingTable() {
+            const kw = document.getElementById('filter-keyword').value.toLowerCase();
+            const site = document.getElementById('filter-site').value;
+            const year = document.getElementById('filter-year').value;
+            const tbody = document.getElementById('pricing-table-body');
+            tbody.innerHTML = '';
+
+            const filtered = state.pricingData.filter(d => {
+                if (site !== 'ALL' && d.site !== site) return false;
+                if (year !== 'ALL' && d.year !== year) return false;
+                if (kw && !d.vendor.toLowerCase().includes(kw) && !d.model.toLowerCase().includes(kw)) return false;
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="p-3 text-center text-slate-600">查無任何匹配數據。</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(d => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/80 transition-all border-b border-slate-800/30";
+                tr.innerHTML = `
+                    <td class="p-2.5 font-bold text-slate-200">${d.site}</td>
+                    <td class="p-2.5 text-slate-400">${d.entity}</td>
+                    <td class="p-2.5 font-mono text-slate-500">${d.toolId}</td>
+                    <td class="p-2.5 font-bold text-blue-400">${d.vendor}</td>
+                    <td class="p-2.5 text-slate-300 max-w-[120px] truncate">${d.model}</td>
+                    <td class="p-2.5 text-slate-400">${d.year}</td>
+                    <td class="p-2.5 font-mono text-slate-500">${d.poNum}</td>
+                    <td class="p-2.5 text-right font-black text-amber-400">NT$ ${d.price.toLocaleString()}</td>
+                    <td class="p-2.5 text-center">
+                        <a href="${d.link}" onclick="alert('開啟聯電核決會議 Selection Meeting Minutes 紀錄')" class="text-cyan-500 hover:text-cyan-400 inline-flex items-center gap-0.5 font-medium"><i class="fa-solid fa-link text-[9px]"></i> Minutes</a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterPricingTable() {
+            renderPricingTable();
+            renderPricingChart();
+        }
+
+        function resetPricingFilters() {
+            document.getElementById('filter-keyword').value = '';
+            document.getElementById('filter-site').value = 'ALL';
+            document.getElementById('filter-year').value = 'ALL';
+            filterPricingTable();
+        }
+
+        function renderPricingChart() {
+            const kw = document.getElementById('filter-keyword').value.toLowerCase();
+            const site = document.getElementById('filter-site').value;
+            const year = document.getElementById('filter-year').value;
+
+            const filtered = state.pricingData.filter(d => {
+                if (site !== 'ALL' && d.site !== site) return false;
+                if (year !== 'ALL' && d.year !== year) return false;
+                if (kw && !d.vendor.toLowerCase().includes(kw) && !d.model.toLowerCase().includes(kw)) return false;
+                return true;
+            });
+
+            const labels = filtered.map(d => `${d.vendor} ${d.model}`);
+            const amounts = filtered.map(d => (d.price / 100000000).toFixed(2)); 
+            const incs = filtered.map(d => d.inc);
+            const pDowns = filtered.map(d => d.pDown);
+            const savings = filtered.map(d => d.saving);
+
+            if (myChartInstance) myChartInstance.destroy();
+
             const ctx = document.getElementById('pricingChart').getContext('2d');
-            new Chart(ctx, {
+            myChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['2021', '2022', '2023', '2024'],
+                    labels: labels,
                     datasets: [
-                        {
-                            type: 'bar',
-                            label: 'PO Amount (M USD)',
-                            data: [120, 150, 180, 140],
-                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                            borderRadius: 4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            type: 'line',
-                            label: 'Incentive %',
-                            data: [2, 3.5, 4, 4.5],
-                            borderColor: '#10b981',
-                            backgroundColor: '#10b981',
-                            tension: 0.3,
-                            borderWidth: 3,
-                            yAxisID: 'y1'
-                        },
-                        {
-                            type: 'line',
-                            label: 'Price Down %',
-                            data: [1.5, 2, 2.8, 3.2],
-                            borderColor: '#f59e0b',
-                            backgroundColor: '#f59e0b',
-                            tension: 0.3,
-                            borderWidth: 3,
-                            yAxisID: 'y1'
-                        },
-                        {
-                            type: 'line',
-                            label: 'Total Saving %',
-                            data: [3.5, 5.5, 6.8, 7.7],
-                            borderColor: '#6366f1',
-                            backgroundColor: '#6366f1',
-                            borderDash: [5, 5],
-                            tension: 0.3,
-                            borderWidth: 3,
-                            yAxisID: 'y1'
-                        }
+                        { label: 'PO Amount (億 TWD)', data: amounts, backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgb(59, 130, 246)', borderWidth: 1, yAxisID: 'y' },
+                        { label: 'Incentive %', data: incs, borderColor: 'rgb(34, 197, 94)', backgroundColor: 'transparent', borderWidth: 2, yAxisID: 'y1', type: 'line', pointRadius: 2 },
+                        { label: 'Price down %', data: pDowns, borderColor: 'rgb(245, 158, 11)', backgroundColor: 'transparent', borderWidth: 2, yAxisID: 'y1', type: 'line', pointRadius: 2 },
+                        { label: 'Total saving %', data: savings, borderColor: 'rgb(6, 182, 212)', backgroundColor: 'transparent', borderWidth: 2, yAxisID: 'y1', type: 'line', borderDash: [3, 3], pointRadius: 2 }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
                     scales: {
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: 'PO Amount (M USD)' }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            grid: { drawOnChartArea: false },
-                            title: { display: true, text: 'Percentage (%)' }
-                        }
+                        x: { grid: { color: 'rgba(51,65,85,0.1)' }, ticks: { color: '#64748b', font: { size: 9 } } },
+                        y: { position: 'left', grid: { color: 'rgba(51,65,85,0.2)' }, ticks: { color: '#64748b', font: { size: 9 } } },
+                        y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#64748b', font: { size: 9 } } }
                     },
                     plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.dataset.type === 'bar') {
-                                        label += '$' + context.parsed.y + 'M';
-                                    } else {
-                                        label += context.parsed.y + '%';
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
+                        legend: { labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 12 }, position: 'top' }
                     }
                 }
             });
+        }
+
+        // ==========================================
+        // AUTO REPORT GENERATOR SIMULATOR
+        // ==========================================
+        function triggerReportGeneration() {
+            const tgt = document.getElementById('report-target').value;
+            const pmpt = document.getElementById('report-prompt').value.trim();
+            const loader = document.getElementById('report-loading-overlay');
+            const sBox = document.getElementById('report-success-box');
+            const txt = document.getElementById('report-status-text');
+
+            sBox.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            setTimeout(() => { txt.innerText = "正在交叉分析跨廠區設備議價指標及產能水位..."; }, 700);
+            setTimeout(() => { txt.innerText = "結合專業顧問防斷鏈採購戰術，打包簡報中..."; }, 1400);
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                sBox.classList.remove('hidden');
+                alert(`✨ 【自動化報告模型成功】\n已完成面向 [${tgt}] 的高階決策簡報彙編！\n自訂輸入摘要提示詞：\n"${pmpt || '預設全功能核心數據摘要'}"`);
+            }, 2000);
+        }
+
+        // ==========================================
+        // SOP SEARCH FILTER
+        // ==========================================
+        function filterSOPCards() {
+            const val = document.getElementById('sop-search-input').value.toLowerCase();
+            document.querySelectorAll('.sop-card').forEach(card => {
+                const title = card.querySelector('.card-title').innerText.toLowerCase();
+                if (title.includes(val)) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            });
+        }
+
+        // ==========================================
+        // SCHEDULE OPERATIONAL OPERATIONS
+        // ==========================================
+        function renderSchedule() {
+            const wList = document.getElementById('weekly-events-list');
+            const pList = document.getElementById('periodic-events-list');
+            wList.innerHTML = '';
+            pList.innerHTML = '';
+
+            state.scheduleEvents.forEach(e => {
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-2 bg-slate-900 border border-slate-850 rounded-lg hover:border-slate-800 text-[11px] min-w-0 gap-2";
+                
+                let ctrlHTML = e.isSystem 
+                    ? `<span class="text-[9px] text-slate-600 font-mono">Locked</span>`
+                    : `<div class="flex gap-2 text-slate-500 shrink-0">
+                        <button onclick="editEvent(${e.id})" class="hover:text-blue-400 transition-all"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteEvent(${e.id})" class="hover:text-red-400 transition-all"><i class="fa-solid fa-trash"></i></button>
+                       </div>`;
+
+                row.innerHTML = `
+                    <div class="min-w-0 space-y-0.5">
+                        <span class="inline-block px-1.5 py-0.2 rounded bg-slate-950 text-[9px] text-slate-400 font-medium">${e.time}</span>
+                        <p class="font-medium text-slate-200 truncate leading-snug" title="${e.title}">${e.title}</p>
+                    </div>
+                    ${ctrlHTML}
+                `;
+
+                if (e.type === 'Weekly') wList.appendChild(row);
+                else pList.appendChild(row);
+            });
+        }
+
+        function toggleEventModal(show) {
+            const m = document.getElementById('event-modal');
+            if (show) m.classList.remove('hidden');
+            else { m.classList.add('hidden'); document.getElementById('event-time').value=''; document.getElementById('event-title').value=''; delete m.dataset.editId; }
+        }
+
+        function submitNewEvent() {
+            const t = document.getElementById('event-type').value;
+            const time = document.getElementById('event-time').value.trim();
+            const title = document.getElementById('event-title').value.trim();
+            const m = document.getElementById('event-modal');
+
+            if (!time || !title) return alert('時間與內容為必填欄位！');
+
+            if (m.dataset.editId) {
+                const target = state.scheduleEvents.find(e => e.id === parseInt(m.dataset.editId));
+                if (target) { target.type = t; target.time = time; target.title = title; }
+            } else {
+                state.scheduleEvents.push({ id: Date.now(), type: t, time: time, title: title, isSystem: false });
+            }
+            toggleEventModal(false);
+            renderSchedule();
+        }
+
+        function editEvent(id) {
+            const e = state.scheduleEvents.find(ev => ev.id === id);
+            if (!e) return;
+            document.getElementById('event-type').value = e.type;
+            document.getElementById('event-time').value = e.time;
+            document.getElementById('event-title').value = e.title;
+            const m = document.getElementById('event-modal');
+            m.dataset.editId = id;
+            m.classList.remove('hidden');
+        }
+
+        function deleteEvent(id) {
+            if (confirm('確定刪除此項採購日程？')) {
+                state.scheduleEvents = state.scheduleEvents.filter(ev => ev.id !== id);
+                renderSchedule();
+            }
+        }
+
+        // ==========================================
+        // VOICE OUT ANONYMOUS FORUM LOGIC
+        // ==========================================
+        function renderForum() {
+            const container = document.getElementById('forum-posts-feed');
+            container.innerHTML = '';
+            state.forumPosts.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950/40 border border-slate-850 rounded-xl p-3 space-y-2 text-xs";
+                let userTag = p.isAnon 
+                    ? `<span class="text-slate-400 flex items-center gap-1 font-bold"><i class="fa-solid fa-user-secret"></i> ${p.user}</span>`
+                    : `<span class="text-blue-400 flex items-center gap-1 font-bold"><i class="fa-solid fa-user-tie"></i> ${p.user}</span>`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">${userTag} <span class="text-[10px] text-slate-600">${p.time}</span></div>
+                    <p class="text-slate-300 leading-relaxed text-[11px]">${p.content}</p>
+                    <div class="flex gap-4 text-[10px] text-slate-500 pt-1.5 border-t border-slate-900/60">
+                        <button onclick="alert('贊同成功！')" class="hover:text-blue-400 flex items-center gap-1"><i class="fa-regular fa-thumbs-up"></i> 贊同 (${p.likes})</button>
+                        <span><i class="fa-regular fa-comment"></i> 回覆 (${p.comments})</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function submitForumPost() {
+            const txt = document.getElementById('forum-input').value.trim();
+            const anon = document.getElementById('forum-anonymous').checked;
+            if (!txt) return alert('內容不能為空！');
+
+            state.forumPosts.unshift({
+                id: Date.now(), user: anon ? '匿名 Buyer' : '聯電同仁 (即時操作)', isAnon: anon, time: '剛才', content: txt, likes: 0, comments: 0
+            });
+            document.getElementById('forum-input').value = '';
+            document.getElementById('forum-anonymous').checked = false;
+            renderForum();
+        }
+
+        // ==========================================
+        // INDUSTRY NEWS COLLAPSIBLE ACCORDION
+        // ==========================================
+        function renderNews() {
+            const container = document.getElementById('news-cards-container');
+            container.innerHTML = '';
+            state.newsData.forEach(n => {
+                const item = document.createElement('div');
+                item.className = "bg-slate-950/40 border border-slate-850 rounded-xl p-3 flex flex-col justify-between space-y-2 hover:border-slate-800 transition-all";
+                item.innerHTML = `
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center text-[9px]">
+                            <span class="px-1.5 py-0.2 rounded bg-blue-950 text-blue-400 font-bold">${n.tag}</span>
+                            <a href="${n.source}" onclick="alert('導向外部真實新聞來源模擬網址')" class="text-slate-500 hover:text-slate-400">來源連結 <i class="fa-solid fa-arrow-up-right-from-square text-[7px]"></i></a>
+                        </div>
+                        <h3 class="text-xs font-bold text-slate-200 leading-snug">${n.title}</h3>
+                    </div>
+                    <div class="bg-slate-900/60 border border-slate-850 rounded-lg p-2 space-y-1.5">
+                        <button onclick="toggleNewsSection(this)" class="w-full flex justify-between items-center text-[11px] font-bold text-cyan-400 hover:text-cyan-300 outline-none">
+                            <span><i class="fa-solid fa-user-astronaut mr-0.5"></i> Advisor Insight (核心顧問觀點)</span>
+                            <i class="fa-solid fa-chevron-down text-[9px] transition-transform duration-200"></i>
+                        </button>
+                        <div class="news-panel hidden text-[11px] text-slate-400 leading-relaxed border-t border-slate-800/40 pt-1.5">
+                            ${n.insight}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleNewsSection(btn) {
+            const panel = btn.nextElementSibling;
+            const chevron = btn.querySelector('.fa-chevron-down');
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                panel.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
         }
     </script>
 </body>
