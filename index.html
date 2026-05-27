@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UMC SemiProcure Nexus v2.6</title>
+    <title>UMC SemiProcure Nexus v2.6 (Light Edition)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,46 +12,47 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
     </style>
 </head>
-<body class="w-screen h-screen overflow-hidden bg-slate-900 text-slate-100 flex select-none">
+<body class="w-screen h-screen overflow-hidden bg-slate-50 text-slate-800 flex select-none">
 
-    <aside id="app-sidebar" class="w-12 sm:w-16 h-full bg-slate-950 flex flex-col justify-between items-center py-4 border-r border-slate-800 shrink-0 z-50 transition-all duration-300">
+    <!-- 左側側邊欄：維持深色調底色以保持專業工具艙的視覺安定感 -->
+    <aside id="app-sidebar" class="w-12 sm:w-16 h-full bg-slate-900 flex flex-col justify-between items-center py-4 border-r border-slate-200 shrink-0 z-50 transition-all duration-300">
         <div class="flex flex-col items-center gap-6 w-full">
             <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-md cursor-pointer" onclick="switchTab('home')">
                 Δ
             </div>
             <nav class="flex flex-col items-center gap-2 w-full px-1">
-                <button onclick="switchTab('home')" id="nav-home" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-blue-500 bg-slate-800/80 transition-all group relative">
+                <button onclick="switchTab('home')" id="nav-home" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-blue-500 bg-slate-800 transition-all group relative">
                     <i class="fa-solid fa-house text-xs sm:text-sm"></i>
-                    <span class="absolute left-14 bg-slate-950 text-slate-200 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-800">Home</span>
+                    <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Home</span>
                 </button>
-                <button onclick="switchTab('pricing')" id="nav-pricing" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-all group relative">
+                <button onclick="switchTab('pricing')" id="nav-pricing" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
                     <i class="fa-solid fa-database text-xs sm:text-sm"></i>
-                    <span class="absolute left-14 bg-slate-950 text-slate-200 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-800">Pricing DB</span>
+                    <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Pricing DB</span>
                 </button>
-                <button onclick="switchTab('delivery')" id="nav-delivery" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-all group relative">
+                <button onclick="switchTab('delivery')" id="nav-delivery" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
                     <i class="fa-solid fa-truck-ramp-box text-xs sm:text-sm"></i>
-                    <span class="absolute left-14 bg-slate-950 text-slate-200 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-800">Delivery Tracking</span>
+                    <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Delivery Tracking</span>
                 </button>
-                <button onclick="switchTab('schedule')" id="nav-schedule" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-all group relative">
+                <button onclick="switchTab('schedule')" id="nav-schedule" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
                     <i class="fa-solid fa-calendar-days text-xs sm:text-sm"></i>
-                    <span class="absolute left-14 bg-slate-950 text-slate-200 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-800">Schedule</span>
+                    <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Schedule</span>
                 </button>
-                <button onclick="switchTab('news')" id="nav-news" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-all group relative">
+                <button onclick="switchTab('news')" id="nav-news" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
                     <i class="fa-solid fa-globe text-xs sm:text-sm"></i>
-                    <span class="absolute left-14 bg-slate-950 text-slate-200 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-800">Industry News</span>
+                    <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Industry News</span>
                 </button>
             </nav>
         </div>
 
         <div class="flex flex-col items-center gap-3 w-full">
-            <button onclick="switchTab('portal')" id="nav-portal" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-500 hover:text-amber-400 hover:bg-slate-900 transition-all group relative border border-dashed border-slate-800">
+            <button onclick="switchTab('portal')" id="nav-portal" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-all group relative border border-dashed border-slate-700">
                 <i class="fa-solid fa-cubes-stacked text-xs"></i>
-                <span class="absolute left-14 bg-slate-950 text-slate-200 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-800">Portal & SOP</span>
+                <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Portal & SOP</span>
             </button>
             <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 text-[10px] font-bold">
                 <span>BY</span>
@@ -59,51 +60,54 @@
         </div>
     </aside>
 
-    <main class="flex-1 h-full flex flex-col bg-slate-900 overflow-hidden min-w-0 relative">
+    <!-- 主內文看版：淺色高質感底色底襯 -->
+    <main class="flex-1 h-full flex flex-col bg-slate-50 overflow-hidden min-w-0 relative">
 
+        <!-- HOME TAB -->
         <div id="tab-home" class="content-pane w-full h-full flex flex-col justify-center items-center px-6 overflow-y-auto transition-all duration-300">
             <div id="home-search-wrapper" class="w-full max-w-xl text-center space-y-6 transition-all duration-300 transform translate-y-0">
-                <h1 class="text-3xl md:text-4xl font-black tracking-tight bg-gradient-to-r from-slate-100 via-blue-200 to-cyan-400 bg-clip-text text-transparent">
+                <h1 class="text-3xl md:text-4xl font-black tracking-tight bg-gradient-to-r from-slate-800 via-blue-700 to-cyan-600 bg-clip-text text-transparent">
                     SemiProcure Nexus
                 </h1>
-                <div class="flex items-center bg-slate-950 border border-slate-800 rounded-full p-1.5 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/10 shadow-2xl transition-all">
-                    <i class="fa-solid fa-magnifying-glass text-slate-500 ml-3.5 mr-2 text-xs"></i>
-                    <input type="text" id="ai-search-input" onkeydown="if(event.key === 'Enter') executeAISearch()" placeholder="Ask about authorization tiers, schedule tasks, deliveries, or generate ppt reports..." class="w-full bg-transparent border-none outline-none text-slate-200 placeholder-slate-600 text-xs py-1.5">
-                    <button onclick="executeAISearch()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-1.5 rounded-full transition-all shrink-0">
+                <div class="flex items-center bg-white border border-slate-200 rounded-full p-1.5 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 shadow-lg transition-all">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 ml-3.5 mr-2 text-xs"></i>
+                    <input type="text" id="ai-search-input" onkeydown="if(event.key === 'Enter') executeAISearch()" placeholder="Ask about authorization tiers, schedule tasks, deliveries, or generate ppt reports..." class="w-full bg-transparent border-none outline-none text-slate-800 placeholder-slate-400 text-xs py-1.5">
+                    <button onclick="executeAISearch()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-1.5 rounded-full transition-all shrink-0 shadow-sm">
                         Ask
                     </button>
                 </div>
-                <div class="flex flex-wrap justify-center gap-2 text-[10px] text-slate-400 font-medium">
-                    <span class="cursor-pointer hover:text-blue-400 bg-slate-950 px-3 py-1 rounded-full border border-slate-800" onclick="quickSearch('Approval thresholds rules')">📋 Approval Levels</span>
-                    <span class="cursor-pointer hover:text-blue-400 bg-slate-950 px-3 py-1 rounded-full border border-slate-800" onclick="quickSearch('Generate ASML executive report ppt')">📊 Generate PPT</span>
-                    <span class="cursor-pointer hover:text-blue-400 bg-slate-950 px-3 py-1 rounded-full border border-slate-800" onclick="quickSearch('這周我有什麼會議？')">📅 My Meetings</span>
-                    <span class="cursor-pointer hover:text-blue-400 bg-slate-950 px-3 py-1 rounded-full border border-slate-800" onclick="quickSearch('PH-EUV-01 最新交期為何？')">🚚 Tool Lead Time</span>
+                <div class="flex flex-wrap justify-center gap-2 text-[10px] text-slate-500 font-medium">
+                    <span class="cursor-pointer hover:text-blue-600 hover:border-blue-200 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm" onclick="quickSearch('Approval thresholds rules')">📋 Approval Levels</span>
+                    <span class="cursor-pointer hover:text-blue-600 hover:border-blue-200 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm" onclick="quickSearch('Generate ASML executive report ppt')">📊 Generate PPT</span>
+                    <span class="cursor-pointer hover:text-blue-600 hover:border-blue-200 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm" onclick="quickSearch('這周我有什麼會議？')">📅 My Meetings</span>
+                    <span class="cursor-pointer hover:text-blue-600 hover:border-blue-200 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm" onclick="quickSearch('PH-EUV-01 最新交期為何？')">🚚 Tool Lead Time</span>
                 </div>
             </div>
 
-            <div id="search-results-container" class="w-full max-w-2xl mt-6 bg-slate-950 border border-slate-800 rounded-xl p-4 overflow-y-auto hidden max-h-[55vh] space-y-3 shadow-2xl">
-                <div class="flex items-center gap-1.5 text-[10px] font-bold text-blue-400 uppercase tracking-widest">
-                    <i class="fa-solid fa-bolt animate-pulse"></i> Nexus Core Engine
+            <div id="search-results-container" class="w-full max-w-2xl mt-6 bg-white border border-slate-200 rounded-xl p-4 overflow-y-auto hidden max-h-[55vh] space-y-3 shadow-xl">
+                <div class="flex items-center gap-1.5 text-[10px] font-bold text-blue-600 uppercase tracking-widest">
+                    <i class="fa-solid fa-bolt"></i> Nexus Core Engine
                 </div>
-                <div id="search-dynamic-content" class="text-xs leading-relaxed text-slate-300 space-y-3"></div>
+                <div id="search-dynamic-content" class="text-xs leading-relaxed text-slate-700 space-y-3"></div>
             </div>
         </div>
 
+        <!-- PRICING DB TAB -->
         <div id="tab-pricing" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4 min-w-0">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4 shrink-0">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4 shrink-0">
                 <div class="flex items-center gap-3">
-                    <button onclick="resetPricingFilters()" id="pricing-back-btn" class="hidden bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 p-2 rounded-lg text-xs transition-all">
+                    <button onclick="resetPricingFilters()" id="pricing-back-btn" class="hidden bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 p-2 rounded-lg text-xs transition-all shadow-sm">
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
                     <div>
-                        <h2 class="text-base font-black tracking-wide text-slate-100 uppercase">Pricing DB</h2>
-                        <p class="text-[11px] text-slate-400">Aggregated cross-fab capital expenditure metrics</p>
+                        <h2 class="text-base font-black tracking-wide text-slate-900 uppercase">Pricing DB</h2>
+                        <p class="text-[11px] text-slate-500">Aggregated cross-fab capital expenditure metrics</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button onclick="injectSampleExcelData()" class="bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-invoice-dollar text-slate-500"></i> Load Sample Data
+                    <button onclick="injectSampleExcelData()" class="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-file-invoice-dollar text-slate-400"></i> Load Sample Data
                     </button>
                     <label class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-lg text-xs cursor-pointer font-bold transition-all shrink-0 flex items-center justify-center w-9 h-9 shadow-md shadow-blue-600/10" title="Import Excel">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -115,14 +119,15 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-slate-950/60 p-3 rounded-xl border border-slate-800/80 shrink-0">
+            <!-- 控制面板區塊 -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white p-3 rounded-xl border border-slate-200 shadow-sm shrink-0">
                 <div>
-                    <label class="block text-[9px] uppercase font-bold text-slate-500 tracking-wider mb-1">Vendor / Model</label>
-                    <input type="text" id="filter-keyword" oninput="filterPricingTable()" placeholder="Search keyword..." class="w-full bg-slate-900 border border-slate-800 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-200">
+                    <label class="block text-[9px] uppercase font-bold text-slate-400 tracking-wider mb-1">Vendor / Model</label>
+                    <input type="text" id="filter-keyword" oninput="filterPricingTable()" placeholder="Search keyword..." class="w-full bg-slate-50 border border-slate-200 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-800">
                 </div>
                 <div>
-                    <label class="block text-[9px] uppercase font-bold text-slate-500 tracking-wider mb-1">Site</label>
-                    <select id="filter-site" onchange="filterPricingTable()" class="w-full bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-1.5 outline-none focus:border-blue-500 text-slate-300">
+                    <label class="block text-[9px] uppercase font-bold text-slate-400 tracking-wider mb-1">Site</label>
+                    <select id="filter-site" onchange="filterPricingTable()" class="w-full bg-slate-50 border border-slate-200 text-[11px] rounded px-2 py-1.5 outline-none focus:border-blue-500 text-slate-700">
                         <option value="ALL">All Sites</option>
                         <option value="12A">12A (Tainan)</option>
                         <option value="12i">12i (Singapore)</option>
@@ -138,32 +143,34 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[9px] uppercase font-bold text-slate-500 tracking-wider mb-1">Year</label>
-                    <select id="filter-year" onchange="filterPricingTable()" class="w-full bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-1.5 outline-none focus:border-blue-500 text-slate-300">
+                    <label class="block text-[9px] uppercase font-bold text-slate-400 tracking-wider mb-1">Year</label>
+                    <select id="filter-year" onchange="filterPricingTable()" class="w-full bg-slate-50 border border-slate-200 text-[11px] rounded px-2 py-1.5 outline-none focus:border-blue-500 text-slate-700">
                         <option value="ALL">All Years</option>
                     </select>
                 </div>
                 <div class="flex items-end gap-1.5">
-                    <button onclick="resetPricingFilters()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] font-medium py-1.5 rounded transition-all text-slate-300">
+                    <button onclick="resetPricingFilters()" class="w-full bg-slate-100 hover:bg-slate-200 text-[11px] font-medium py-1.5 rounded transition-all text-slate-700 border border-slate-200">
                         Clear
                     </button>
-                    <button onclick="toggleChartView()" id="btn-toggle-chart" class="hidden w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 text-[10px] md:text-xs font-bold py-1.5 rounded transition-all text-cyan-400 whitespace-nowrap overflow-hidden text-ellipsis">
+                    <button onclick="toggleChartView()" id="btn-toggle-chart" class="hidden w-full bg-slate-900 hover:bg-slate-800 text-[10px] md:text-xs font-bold py-1.5 rounded transition-all text-cyan-400 whitespace-nowrap overflow-hidden text-ellipsis shadow-sm">
                         Toggle Chart View
                     </button>
                 </div>
             </div>
 
-            <div id="chart-wrapper-box" class="hidden bg-slate-950/60 border border-slate-800 rounded-xl p-4 shrink-0 transition-all">
+            <!-- 圖表外殼區塊 -->
+            <div id="chart-wrapper-box" class="hidden bg-white border border-slate-200 rounded-xl p-4 shrink-0 shadow-sm transition-all">
                 <div class="relative h-56 w-full">
                     <canvas id="pricingChart"></canvas>
                 </div>
             </div>
 
-            <div class="bg-slate-950/30 border border-slate-800 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px]">
+            <!-- 表格主區塊：導入高亮對比深色表頭 -->
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px] shadow-sm">
                 <div class="overflow-x-auto w-full flex-1">
                     <table class="w-full text-left border-collapse text-[11px]">
                         <thead>
-                            <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 uppercase tracking-widest font-bold whitespace-nowrap">
+                            <tr class="bg-slate-900 border-b border-slate-800 text-slate-100 uppercase tracking-widest font-bold whitespace-nowrap">
                                 <th class="p-3">Site</th>
                                 <th class="p-3">Entity</th>
                                 <th class="p-3">Tool ID</th>
@@ -178,10 +185,10 @@
                                 <th class="p-3 text-center">Meeting Link</th>
                             </tr>
                         </thead>
-                        <tbody id="pricing-table-body" class="divide-y divide-slate-800/40 text-slate-300 whitespace-nowrap">
+                        <tbody id="pricing-table-body" class="divide-y divide-slate-200 text-slate-700 whitespace-nowrap bg-white">
                             <tr>
-                                <td colspan="12" class="p-8 text-center text-slate-500 space-y-2">
-                                    <i class="fa-solid fa-folder-open text-2xl block text-slate-600 mb-1"></i>
+                                <td colspan="12" class="p-8 text-center text-slate-400 space-y-2 bg-white">
+                                    <i class="fa-solid fa-folder-open text-2xl block text-slate-300 mb-1"></i>
                                     Database empty. Please import an Excel file or load the sample data block to begin analysis.
                                 </td>
                             </tr>
@@ -191,15 +198,16 @@
             </div>
         </div>
 
+        <!-- DELIVERY TRACKING TAB -->
         <div id="tab-delivery" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4 min-w-0">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4 shrink-0">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4 shrink-0">
                 <div>
-                    <h2 class="text-base font-black tracking-wide text-slate-100 uppercase">Delivery Tracking</h2>
-                    <p class="text-[11px] text-slate-400">Precision monitoring of equipment lead times, logistics tracking, and delivery discrepancies</p>
+                    <h2 class="text-base font-black tracking-wide text-slate-900 uppercase">Delivery Tracking</h2>
+                    <p class="text-[11px] text-slate-500">Precision monitoring of equipment lead times, logistics tracking, and delivery discrepancies</p>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button onclick="injectSampleDeliveryData()" class="bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-truck-fast text-slate-500"></i> Load Delivery Data
+                    <button onclick="injectSampleDeliveryData()" class="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-truck-fast text-slate-400"></i> Load Delivery Data
                     </button>
                     <label class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-lg text-xs cursor-pointer font-bold transition-all w-9 h-9 flex items-center justify-center shrink-0 shadow-md shadow-blue-600/10" title="Upload Delivery Excel">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -208,31 +216,33 @@
                 </div>
             </div>
 
+            <!-- 看板總量資訊區 -->
             <div id="delivery-summary-box" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-col justify-center">
-                    <span class="text-[9px] uppercase tracking-wider font-bold text-slate-500">Operational Shifts Summary</span>
-                    <p id="summary-text-main" class="text-xs font-semibold text-slate-300 mt-1">No file loaded</p>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col justify-center shadow-sm">
+                    <span class="text-[9px] uppercase tracking-wider font-bold text-slate-400">Operational Shifts Summary</span>
+                    <p id="summary-text-main" class="text-xs font-semibold text-slate-600 mt-1">No file loaded</p>
                 </div>
-                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
                     <div>
-                        <span class="text-[9px] uppercase tracking-wider font-bold text-slate-400">Critical Push Outs</span>
-                        <div id="summary-push-count" class="text-xl font-black text-rose-500 mt-0.5">0</div>
+                        <span class="text-[9px] uppercase tracking-wider font-bold text-slate-500">Critical Push Outs</span>
+                        <div id="summary-push-count" class="text-xl font-black text-rose-600 mt-0.5">0</div>
                     </div>
-                    <i class="fa-solid fa-triangle-exclamation text-rose-900 text-xl"></i>
+                    <i class="fa-solid fa-triangle-exclamation text-rose-200 text-xl"></i>
                 </div>
-                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
                     <div>
-                        <span class="text-[9px] uppercase tracking-wider font-bold text-slate-400">Optimization Pull Ins</span>
-                        <div id="summary-pull-count" class="text-xl font-black text-emerald-500 mt-0.5">0</div>
+                        <span class="text-[9px] uppercase tracking-wider font-bold text-slate-500">Optimization Pull Ins</span>
+                        <div id="summary-pull-count" class="text-xl font-black text-emerald-600 mt-0.5">0</div>
                     </div>
-                    <i class="fa-solid fa-circle-check text-emerald-900 text-xl"></i>
+                    <i class="fa-solid fa-circle-check text-emerald-200 text-xl"></i>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800/80 shrink-0">
-                <input type="text" id="del-filter-tool" oninput="filterDeliveryTable()" placeholder="Search Tool ID..." class="bg-slate-900 border border-slate-800 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-200">
-                <input type="text" id="del-filter-vendor" oninput="filterDeliveryTable()" placeholder="Search Vendor..." class="bg-slate-900 border border-slate-800 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-200">
-                <select id="del-filter-site" onchange="filterDeliveryTable()" class="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-1.5 outline-none text-slate-300">
+            <!-- 篩選列 -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm shrink-0">
+                <input type="text" id="del-filter-tool" oninput="filterDeliveryTable()" placeholder="Search Tool ID..." class="bg-slate-50 border border-slate-200 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-800">
+                <input type="text" id="del-filter-vendor" oninput="filterDeliveryTable()" placeholder="Search Vendor..." class="bg-slate-50 border border-slate-200 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-800">
+                <select id="del-filter-site" onchange="filterDeliveryTable()" class="bg-slate-50 border border-slate-200 text-[11px] rounded px-2 py-1.5 outline-none text-slate-700">
                     <option value="ALL">All Sites</option>
                     <option value="12A">12A</option>
                     <option value="12i">12i</option>
@@ -246,7 +256,7 @@
                     <option value="8S">8S</option>
                     <option value="8N">8N</option>
                 </select>
-                <select id="del-filter-project" onchange="filterDeliveryTable()" class="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-1.5 outline-none text-slate-300">
+                <select id="del-filter-project" onchange="filterDeliveryTable()" class="bg-slate-50 border border-slate-200 text-[11px] rounded px-2 py-1.5 outline-none text-slate-700">
                     <option value="ALL">All Projects</option>
                     <option value="Phase 6 Expansion">Phase 6 Expansion</option>
                     <option value="SG Node Optimize">SG Node Optimize</option>
@@ -254,16 +264,17 @@
                     <option value="Kochi Retrofit">Kochi Retrofit</option>
                     <option value="Hsinchu 8-inch Legacy">Hsinchu 8-inch Legacy</option>
                 </select>
-                <button onclick="resetDeliveryFilters()" class="bg-slate-800 hover:bg-slate-700 text-[11px] rounded font-medium py-1.5 text-slate-300 transition-all">
+                <button onclick="resetDeliveryFilters()" class="bg-slate-800 hover:bg-slate-700 text-white text-[11px] rounded font-medium py-1.5 transition-all shadow-sm">
                     Reset Filters
                 </button>
             </div>
 
-            <div class="bg-slate-950/30 border border-slate-800 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[220px]">
+            <!-- 交期追踪表：深色表頭突顯 -->
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[220px] shadow-sm">
                 <div class="overflow-x-auto w-full flex-1">
                     <table class="w-full text-left border-collapse text-[11px]">
                         <thead>
-                            <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 uppercase tracking-widest font-bold whitespace-nowrap">
+                            <tr class="bg-slate-900 border-b border-slate-800 text-slate-100 uppercase tracking-widest font-bold whitespace-nowrap">
                                 <th class="p-3">Site</th>
                                 <th class="p-3">Project</th>
                                 <th class="p-3">Entity</th>
@@ -274,10 +285,10 @@
                                 <th class="p-3 text-right">Gap (Days)</th>
                             </tr>
                         </thead>
-                        <tbody id="delivery-table-body" class="divide-y divide-slate-800/40 text-slate-300 whitespace-nowrap">
+                        <tbody id="delivery-table-body" class="divide-y divide-slate-200 text-slate-700 whitespace-nowrap bg-white">
                             <tr>
-                                <td colspan="8" class="p-8 text-center text-slate-500 space-y-2">
-                                    <i class="fa-solid fa-truck-loading text-2xl block text-slate-600 mb-1"></i>
+                                <td colspan="8" class="p-8 text-center text-slate-400 space-y-2">
+                                    <i class="fa-solid fa-truck-loading text-2xl block text-slate-300 mb-1"></i>
                                     Delivery timeline context ledger unpopulated. Upload logistics asset matrix spreadsheet.
                                 </td>
                             </tr>
@@ -287,128 +298,134 @@
             </div>
         </div>
 
+        <!-- SCHEDULE TAB -->
         <div id="tab-schedule" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-3 shrink-0">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-3 shrink-0">
                 <div>
-                    <h2 class="text-base font-black tracking-wide text-slate-100 uppercase">Schedule Calendar</h2>
-                    <p class="text-[11px] text-slate-400">Routine agenda tracking, cross-functional project sync structures, and dynamic meeting timeline integration</p>
+                    <h2 class="text-base font-black tracking-wide text-slate-900 uppercase">Schedule Calendar</h2>
+                    <p class="text-[11px] text-slate-500">Routine agenda tracking, cross-functional project sync structures, and dynamic meeting timeline integration</p>
                 </div>
                 <div class="flex flex-wrap gap-1.5">
-                    <button onclick="highlightRoutine('Team Meeting')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold text-blue-400 transition-all">🔄 Weekly Team Sync</button>
-                    <button onclick="highlightRoutine('2nd Source')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold text-cyan-400 transition-all">🤝 2nd Source Review</button>
-                    <button onclick="highlightRoutine('Lead Time')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold text-amber-400 transition-all">📈 Monthly Survey</button>
-                    <button onclick="highlightRoutine('Loading')" class="bg-slate-950 hover:bg-slate-900 border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold text-rose-400 transition-all">🏭 Quarterly Loading</button>
+                    <button onclick="highlightRoutine('Team Meeting')" class="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded text-[10px] font-bold text-blue-600 shadow-sm transition-all">🔄 Weekly Team Sync</button>
+                    <button onclick="highlightRoutine('2nd Source')" class="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded text-[10px] font-bold text-cyan-600 shadow-sm transition-all">🤝 2nd Source Review</button>
+                    <button onclick="highlightRoutine('Lead Time')" class="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded text-[10px] font-bold text-amber-600 shadow-sm transition-all">📈 Monthly Survey</button>
+                    <button onclick="highlightRoutine('Loading')" class="bg-white hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded text-[10px] font-bold text-rose-600 shadow-sm transition-all">🏭 Quarterly Loading</button>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-5 gap-3 flex-1 min-h-[350px]">
-                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px]">
-                    <span class="text-xs font-black text-slate-400 pb-1 border-b border-slate-900">Monday</span>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px] shadow-sm">
+                    <span class="text-xs font-black text-slate-500 pb-1 border-b border-slate-100">Monday</span>
                     <div id="day-Monday" class="space-y-2 flex-1 overflow-y-auto"></div>
                 </div>
-                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px]">
-                    <span class="text-xs font-black text-slate-400 pb-1 border-b border-slate-900">Tuesday</span>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px] shadow-sm">
+                    <span class="text-xs font-black text-slate-500 pb-1 border-b border-slate-100">Tuesday</span>
                     <div id="day-Tuesday" class="space-y-2 flex-1 overflow-y-auto"></div>
                 </div>
-                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px]">
-                    <span class="text-xs font-black text-blue-400 pb-1 border-b border-blue-950">Wednesday</span>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px] shadow-sm">
+                    <span class="text-xs font-black text-blue-600 pb-1 border-b border-blue-50">Wednesday</span>
                     <div id="day-Wednesday" class="space-y-2 flex-1 overflow-y-auto"></div>
                 </div>
-                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px]">
-                    <span class="text-xs font-black text-slate-400 pb-1 border-b border-slate-900">Thursday</span>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px] shadow-sm">
+                    <span class="text-xs font-black text-slate-500 pb-1 border-b border-slate-100">Thursday</span>
                     <div id="day-Thursday" class="space-y-2 flex-1 overflow-y-auto"></div>
                 </div>
-                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px]">
-                    <span class="text-xs font-black text-slate-400 pb-1 border-b border-slate-900">Friday</span>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col space-y-2 min-h-[150px] shadow-sm">
+                    <span class="text-xs font-black text-slate-500 pb-1 border-b border-slate-100">Friday</span>
                     <div id="day-Friday" class="space-y-2 flex-1 overflow-y-auto"></div>
                 </div>
             </div>
         </div>
 
+        <!-- INDUSTRY NEWS TAB -->
         <div id="tab-news" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4">
-            <div class="border-b border-slate-800 pb-3 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="border-b border-slate-200 pb-3 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h2 class="text-base font-black tracking-wide text-slate-100 uppercase">Industry News</h2>
-                    <p class="text-[11px] text-slate-400">Macro intelligence streams & semiconductor procurement brief aggregates</p>
+                    <h2 class="text-base font-black tracking-wide text-slate-900 uppercase">Industry News</h2>
+                    <p class="text-[11px] text-slate-500">Macro intelligence streams & semiconductor procurement brief aggregates</p>
                 </div>
                 <div class="flex flex-wrap gap-1">
-                    <button onclick="filterNews('ALL')" class="news-tab-btn bg-blue-600 text-white font-bold text-[10px] px-2.5 py-1 rounded transition-all">All Streams</button>
-                    <button onclick="filterNews('EQUIPMENT')" class="news-tab-btn bg-slate-950 hover:bg-slate-900 border border-slate-800 font-bold text-[10px] px-2.5 py-1 rounded transition-all text-slate-400">機台相關</button>
-                    <button onclick="filterNews('RAW')" class="news-tab-btn bg-slate-950 hover:bg-slate-900 border border-slate-800 font-bold text-[10px] px-2.5 py-1 rounded transition-all text-slate-400">原物料</button>
-                    <button onclick="filterNews('CHAIN')" class="news-tab-btn bg-slate-950 hover:bg-slate-900 border border-slate-800 font-bold text-[10px] px-2.5 py-1 rounded transition-all text-slate-400">供應鏈</button>
-                    <button onclick="filterNews('CURRENT')" class="news-tab-btn bg-slate-950 hover:bg-slate-900 border border-slate-800 font-bold text-[10px] px-2.5 py-1 rounded transition-all text-slate-400">時事</button>
+                    <button onclick="filterNews('ALL')" class="news-tab-btn bg-blue-600 text-white font-bold text-[10px] px-2.5 py-1 rounded shadow-sm transition-all">All Streams</button>
+                    <button onclick="filterNews('EQUIPMENT')" class="news-tab-btn bg-white hover:bg-slate-100 border border-slate-200 font-bold text-[10px] px-2.5 py-1 rounded shadow-sm transition-all text-slate-600">機台相關</button>
+                    <button onclick="filterNews('RAW')" class="news-tab-btn bg-white hover:bg-slate-100 border border-slate-200 font-bold text-[10px] px-2.5 py-1 rounded shadow-sm transition-all text-slate-600">原物料</button>
+                    <button onclick="filterNews('CHAIN')" class="news-tab-btn bg-white hover:bg-slate-100 border border-slate-200 font-bold text-[10px] px-2.5 py-1 rounded shadow-sm transition-all text-slate-600">供應鏈</button>
+                    <button onclick="filterNews('CURRENT')" class="news-tab-btn bg-white hover:bg-slate-100 border border-slate-200 font-bold text-[10px] px-2.5 py-1 rounded shadow-sm transition-all text-slate-600">時事</button>
                 </div>
             </div>
             
             <div id="news-matrix-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
+        <!-- PORTAL & SOP TAB -->
         <div id="tab-portal" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-5">
             <div>
-                <h2 class="text-base font-black tracking-wide text-slate-100 uppercase">Portal & SOP</h2>
-                <p class="text-[11px] text-slate-400">Integrated core system gateways & compliance directives matrices</p>
+                <h2 class="text-base font-black tracking-wide text-slate-900 uppercase">Portal & SOP</h2>
+                <p class="text-[11px] text-slate-500">Integrated core system gateways & compliance directives matrices</p>
             </div>
             
             <div class="space-y-2.5">
-                <h3 class="text-[10px] font-bold uppercase text-slate-500 tracking-widest">Core Infrastructure Portals</h3>
+                <h3 class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Core Infrastructure Portals</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-                    <a href="#" onclick="alert('Rerouting to system node: PR/PO Worklist Manager')" class="flex flex-col items-center justify-center p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-all text-center group">
-                        <div class="w-8 h-8 rounded-lg bg-blue-600/10 flex items-center justify-center text-blue-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-signature text-xs"></i></div>
-                        <span class="text-[11px] font-bold text-slate-300">PR/PO Portal</span>
+                    <a href="#" onclick="alert('Rerouting to system node: PR/PO Worklist Manager')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-blue-400 shadow-sm transition-all text-center group">
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-signature text-xs"></i></div>
+                        <span class="text-[11px] font-bold text-slate-700">PR/PO Portal</span>
                     </a>
-                    <a href="#" onclick="alert('Rerouting to system node: UMC Procurement Net Link')" class="flex flex-col items-center justify-center p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-all text-center group">
-                        <div class="w-8 h-8 rounded-lg bg-cyan-600/10 flex items-center justify-center text-cyan-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-cart-shopping text-xs"></i></div>
-                        <span class="text-[11px] font-bold text-slate-300">EP System</span>
+                    <a href="#" onclick="alert('Rerouting to system node: UMC Procurement Net Link')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-cyan-400 shadow-sm transition-all text-center group">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center text-cyan-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-cart-shopping text-xs"></i></div>
+                        <span class="text-[11px] font-bold text-slate-700">EP System</span>
                     </a>
-                    <a href="#" onclick="alert('Rerouting to system node: SAP Production Node Base')" class="flex flex-col items-center justify-center p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-all text-center group">
-                        <div class="w-8 h-8 rounded-lg bg-amber-600/10 flex items-center justify-center text-amber-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-layer-group text-xs"></i></div>
-                        <span class="text-[11px] font-bold text-slate-300">SAP ERP</span>
+                    <a href="#" onclick="alert('Rerouting to system node: SAP Production Node Base')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-amber-400 shadow-sm transition-all text-center group">
+                        <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-layer-group text-xs"></i></div>
+                        <span class="text-[11px] font-bold text-slate-700">SAP ERP</span>
                     </a>
-                    <a href="#" onclick="alert('Rerouting to system node: NDA Vault and Corporate Compliance Legal Gateway')" class="flex flex-col items-center justify-center p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-all text-center group">
-                        <div class="w-8 h-8 rounded-lg bg-red-600/10 flex items-center justify-center text-red-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-building-shield text-xs"></i></div>
-                        <span class="text-[11px] font-bold text-slate-300">NDA Module</span>
+                    <a href="#" onclick="alert('Rerouting to system node: NDA Vault and Corporate Compliance Legal Gateway')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-red-400 shadow-sm transition-all text-center group">
+                        <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-building-shield text-xs"></i></div>
+                        <span class="text-[11px] font-bold text-slate-700">NDA Module</span>
                     </a>
-                    <a href="#" onclick="alert('Rerouting to system node: PR SYSTEM Core Processing Engine')" class="flex flex-col items-center justify-center p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-all text-center group">
-                        <div class="w-8 h-8 rounded-lg bg-emerald-600/10 flex items-center justify-center text-emerald-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-file-invoice text-xs"></i></div>
-                        <span class="text-[11px] font-bold text-slate-300">PR SYSTEM</span>
+                    <!-- PR SYSTEM -->
+                    <a href="#" onclick="alert('Rerouting to system node: PR SYSTEM Core Processing Engine')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-emerald-400 shadow-sm transition-all text-center group">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-file-invoice text-xs"></i></div>
+                        <span class="text-[11px] font-bold text-slate-700">PR SYSTEM</span>
                     </a>
-                    <a href="#" onclick="alert('Rerouting to system node: UMC Organizational Unit Gateway')" class="flex flex-col items-center justify-center p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-all text-center group">
-                        <div class="w-8 h-8 rounded-lg bg-purple-600/10 flex items-center justify-center text-purple-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-sitemap text-xs"></i></div>
-                        <span class="text-[11px] font-bold text-slate-300">UMC OU</span>
+                    <!-- UMC OU -->
+                    <a href="#" onclick="alert('Rerouting to system node: UMC Organizational Unit Gateway')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-purple-400 shadow-sm transition-all text-center group">
+                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-sitemap text-xs"></i></div>
+                        <span class="text-[11px] font-bold text-slate-700">UMC OU</span>
                     </a>
-                    <a href="#" onclick="alert('Rerouting to system node: Operation System Documentary Vault')" class="flex flex-col items-center justify-center p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 transition-all text-center group">
-                        <div class="w-8 h-8 rounded-lg bg-teal-600/10 flex items-center justify-center text-teal-400 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-file-lines text-xs"></i></div>
-                        <span class="text-[11px] font-bold text-slate-300">OS documentary</span>
+                    <!-- OS documentary -->
+                    <a href="#" onclick="alert('Rerouting to system node: Operation System Documentary Vault')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-teal-400 shadow-sm transition-all text-center group">
+                        <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-file-lines text-xs"></i></div>
+                        <span class="text-[11px] font-bold text-slate-700">OS documentary</span>
                     </a>
                 </div>
             </div>
 
             <div class="space-y-2.5 pt-2">
-                <h3 class="text-[10px] font-bold uppercase text-slate-500 tracking-widest">Standard Operating Procedures</h3>
+                <h3 class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Standard Operating Procedures</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between cursor-pointer" onclick="alert('Viewing Asset Document Index: UMC-PROC-02')">
+                    <div class="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between shadow-sm cursor-pointer hover:border-blue-400 transition-all" onclick="alert('Viewing Asset Document Index: UMC-PROC-02')">
                         <div class="space-y-2">
-                            <div class="w-6 h-6 rounded bg-slate-900 text-blue-400 flex items-center justify-center text-xs"><i class="fa-solid fa-scale-balanced"></i></div>
-                            <h4 class="text-xs font-bold text-slate-200">Procurement Control Matrix</h4>
-                            <p class="text-[11px] text-slate-400 leading-relaxed">Internal corporate authorization rules controlling capitalization thresholds and tier sign-off chains.</p>
+                            <div class="w-6 h-6 rounded bg-slate-50 text-blue-600 flex items-center justify-center text-xs"><i class="fa-solid fa-scale-balanced"></i></div>
+                            <h4 class="text-xs font-bold text-slate-800">Procurement Control Matrix</h4>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Internal corporate authorization rules controlling capitalization thresholds and tier sign-off chains.</p>
                         </div>
-                        <span class="text-[9px] text-slate-600 font-mono mt-3 block">Ref: UMC-SOP-PROC-02</span>
+                        <span class="text-[9px] text-slate-400 font-mono mt-3 block">Ref: UMC-SOP-PROC-02</span>
                     </div>
-                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between cursor-pointer" onclick="alert('Viewing Asset Document Index: UMC-NEG-PLAYBOOK')">
+                    <div class="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between shadow-sm cursor-pointer hover:border-blue-400 transition-all" onclick="alert('Viewing Asset Document Index: UMC-NEG-PLAYBOOK')">
                         <div class="space-y-2">
-                            <div class="w-6 h-6 rounded bg-slate-900 text-amber-400 flex items-center justify-center text-xs"><i class="fa-solid fa-handshake-simple"></i></div>
-                            <h4 class="text-xs font-bold text-slate-200">Negotiation Strategy Playbook</h4>
-                            <p class="text-[11px] text-slate-400 leading-relaxed">Tactical procedures optimized for countering single-source technology monopoly locking maneuvers.</p>
+                            <div class="w-6 h-6 rounded bg-slate-50 text-amber-600 flex items-center justify-center text-xs"><i class="fa-solid fa-handshake-simple"></i></div>
+                            <h4 class="text-xs font-bold text-slate-800">Negotiation Strategy Playbook</h4>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Tactical procedures optimized for countering single-source technology monopoly locking maneuvers.</p>
                         </div>
-                        <span class="text-[9px] text-slate-600 font-mono mt-3 block">Ref: UMC-NEG-PLAYBOOK</span>
+                        <span class="text-[9px] text-slate-400 font-mono mt-3 block">Ref: UMC-NEG-PLAYBOOK</span>
                     </div>
-                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between cursor-pointer" onclick="alert('Viewing Asset Document Index: UMC-ONBOARD-GUIDE')">
+                    <div class="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between shadow-sm cursor-pointer hover:border-blue-400 transition-all" onclick="alert('Viewing Asset Document Index: UMC-ONBOARD-GUIDE')">
                         <div class="space-y-2">
-                            <div class="w-6 h-6 rounded bg-slate-900 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-address-card"></i></div>
-                            <h4 class="text-xs font-bold text-slate-200">Onboarding Framework</h4>
-                            <p class="text-[11px] text-slate-400 leading-relaxed">System component nomenclature directory, structural dictionaries, and asset alignment pathways.</p>
+                            <div class="w-6 h-6 rounded bg-slate-50 text-emerald-600 flex items-center justify-center text-xs"><i class="fa-solid fa-address-card"></i></div>
+                            <h4 class="text-xs font-bold text-slate-800">Onboarding Framework</h4>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">System component nomenclature directory, structural dictionaries, and asset alignment pathways.</p>
                         </div>
-                        <span class="text-[9px] text-slate-600 font-mono mt-3 block">Ref: UMC-GUIDE-ONB</span>
+                        <span class="text-[9px] text-slate-400 font-mono mt-3 block">Ref: UMC-GUIDE-ONB</span>
                     </div>
                 </div>
             </div>
@@ -465,13 +482,13 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('text-blue-500', 'bg-slate-800/80');
-                btn.classList.add('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-900');
+                btn.classList.remove('text-blue-500', 'bg-slate-800');
+                btn.classList.add('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800');
             });
             const activeBtn = document.getElementById(`nav-${tabId}`);
             if (activeBtn) {
-                activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-900');
-                activeBtn.classList.add('text-blue-500', 'bg-slate-800/80');
+                activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-800');
+                activeBtn.classList.add('text-blue-500', 'bg-slate-800');
             }
 
             if (tabId === 'home') {
@@ -484,9 +501,6 @@
             }
         }
 
-        // ==========================================
-        // HOME LOGIC / MULTI-DIMENSIONAL INTELLIGENCE
-        // ==========================================
         function quickSearch(text) {
             document.getElementById('ai-search-input').value = text;
             executeAISearch();
@@ -501,7 +515,7 @@
             resultsPane.classList.remove('hidden');
 
             const contentDiv = document.getElementById('search-dynamic-content');
-            contentDiv.innerHTML = `<div class="text-[11px] text-slate-500 flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> Parsing internal matrix data clusters...</div>`;
+            contentDiv.innerHTML = `<div class="text-[11px] text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> Parsing internal matrix data clusters...</div>`;
 
             setTimeout(() => {
                 let html = '';
@@ -514,13 +528,13 @@
 
                     html = `
                         <div class="space-y-3">
-                            <p class="font-bold text-slate-200">💡 系統偵測到簡報生成指令與關鍵字</p>
-                            <p class="text-slate-400">已自動串接 <strong>Pricing DB</strong> 提取資料。是否立即為您生成一份針對高階主管編排的深色調大氣商業 PPTX 簡報（包含動態計算之 PO 金額加總與 Saving % 平均值）？</p>
-                            <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-1">
-                                <div class="text-[10px] text-slate-500 uppercase font-mono font-bold">動態分析目標</div>
-                                <div class="text-xs text-blue-400 font-bold">${targetVendor} 歷年高階設備採購大數據報告</div>
+                            <p class="font-bold text-slate-800">💡 系統偵測到簡報生成指令與關鍵字</p>
+                            <p class="text-slate-500">已自動串接 <strong>Pricing DB</strong> 提取資料。是否立即為您生成一份針對高階主管編排的乾淨商務風格 PPTX 簡報？</p>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
+                                <div class="text-[10px] text-slate-400 uppercase font-mono font-bold">動態分析目標</div>
+                                <div class="text-xs text-blue-600 font-bold">${targetVendor} 歷年高階設備採購大數據報告</div>
                             </div>
-                            <button onclick="triggerInlinePPTXGeneration('${targetVendor}')" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold py-2 rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10">
+                            <button onclick="triggerInlinePPTXGeneration('${targetVendor}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded-lg text-xs transition-all flex items-center justify-center gap-2 shadow-md">
                                 <i class="fa-solid fa-file-powerpoint text-sm"></i> 確定生成並下載 PowerPoint 簡報
                             </button>
                         </div>
@@ -534,18 +548,18 @@
 
                         html = `
                             <div class="space-y-2">
-                                <p class="text-emerald-400 font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> 行事曆行程動態注入成功！</p>
-                                <p class="text-slate-300">已直接為您排定行程：<span class="text-slate-100 font-bold">本週三下午 03:00 PM — Vendor 產能交期對齊特別會議</span>。</p>
-                                <button onclick="switchTab('schedule')" class="text-blue-400 hover:underline text-[11px] font-bold block pt-1">前往行事曆查看細節 →</button>
+                                <p class="text-emerald-600 font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> 行事曆行程動態注入成功！</p>
+                                <p class="text-slate-600">已直接為您排定行程：<span class="text-slate-900 font-bold">本週三下午 03:00 PM — Vendor 產能交期對齊特別會議</span>。</p>
+                                <button onclick="switchTab('schedule')" class="text-blue-600 hover:underline text-[11px] font-bold block pt-1">前往行事曆查看細節 →</button>
                             </div>
                         `;
                     } else {
-                        html = `<p class="font-bold text-slate-200">📅 您本週排定的例行性與重要會議清單：</p><div class="space-y-1.5">`;
+                        html = `<p class="font-bold text-slate-800">📅 您本週排定的例行性與重要會議清單：</p><div class="space-y-1.5">`;
                         state.scheduleEvents.forEach(ev => {
                             html += `
-                                <div class="bg-slate-900 border border-slate-800 rounded p-2 text-[11px] flex justify-between items-center">
-                                    <div><span class="font-bold text-slate-400 font-mono">[${ev.day} ${ev.time}]</span> <span class="text-slate-200 ml-1.5">${ev.title}</span></div>
-                                    <span class="px-2 py-0.5 rounded bg-slate-950 text-blue-400 text-[9px] font-bold uppercase">${ev.type}</span>
+                                <div class="bg-slate-50 border border-slate-200 rounded p-2 text-[11px] flex justify-between items-center shadow-sm">
+                                    <div><span class="font-bold text-slate-500 font-mono">[${ev.day} ${ev.time}]</span> <span class="text-slate-800 ml-1.5">${ev.title}</span></div>
+                                    <span class="px-2 py-0.5 rounded bg-white border border-slate-200 text-blue-600 text-[9px] font-bold uppercase shadow-sm">${ev.type}</span>
                                 </div>`;
                         });
                         html += `</div>`;
@@ -560,50 +574,50 @@
                     let record = state.deliveryData.find(d => d.toolId.toLowerCase() === matchedId.toLowerCase());
 
                     if (record) {
-                        const gapColor = record.gap > 0 ? 'text-rose-500' : record.gap < 0 ? 'text-emerald-500' : 'text-slate-400';
+                        const gapColor = record.gap > 0 ? 'text-rose-600' : record.gap < 0 ? 'text-emerald-600' : 'text-slate-500';
                         html = `
                             <div class="space-y-3.5">
-                                <p class="font-bold text-slate-200">🚚 跨組資料庫即時交叉索引結果：</p>
-                                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 space-y-2">
-                                    <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                                        <span class="font-mono text-sm font-black text-blue-400">${record.toolId}</span>
-                                        <span class="text-[10px] bg-slate-950 text-slate-400 px-2 py-0.5 rounded font-bold">${record.project}</span>
+                                <p class="font-bold text-slate-800">🚚 跨組資料庫即時交叉索引結果：</p>
+                                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2 shadow-sm">
+                                    <div class="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                                        <span class="font-mono text-sm font-black text-blue-600">${record.toolId}</span>
+                                        <span class="text-[10px] bg-white border border-slate-200 text-slate-500 px-2 py-0.5 rounded font-bold shadow-sm">${record.project}</span>
                                     </div>
                                     <div class="grid grid-cols-2 gap-y-2 text-[11px]">
-                                        <div><span class="text-slate-500">廠區 Site:</span> <span class="font-bold text-slate-300">${record.site}</span></div>
-                                        <div><span class="text-slate-500">供應商 Vendor:</span> <span class="font-bold text-slate-300">${record.vendor}</span></div>
-                                        <div><span class="text-slate-500">要求交期 Req. Date:</span> <span class="font-bold text-slate-300 font-mono">${record.reqDate}</span></div>
-                                        <div><span class="text-slate-500">最新回覆 Reply Date:</span> <span class="font-bold text-blue-400 font-mono">${record.vendorDate}</span></div>
+                                        <div><span class="text-slate-400">廠區 Site:</span> <span class="font-bold text-slate-700">${record.site}</span></div>
+                                        <div><span class="text-slate-400">供應商 Vendor:</span> <span class="font-bold text-slate-700">${record.vendor}</span></div>
+                                        <div><span class="text-slate-400">要求交期 Req. Date:</span> <span class="font-bold text-slate-700 font-mono">${record.reqDate}</span></div>
+                                        <div><span class="text-slate-400">最新回覆 Reply Date:</span> <span class="font-bold text-blue-600 font-mono">${record.vendorDate}</span></div>
                                     </div>
-                                    <div class="pt-1.5 border-t border-slate-800 text-[11px] flex justify-between items-center">
-                                        <span class="text-slate-400">交期落差 Gap:</span>
+                                    <div class="pt-1.5 border-t border-slate-200 text-[11px] flex justify-between items-center">
+                                        <span class="text-slate-500">交期落差 Gap:</span>
                                         <span class="font-black ${gapColor} font-mono">${record.gap > 0 ? '+' + record.gap : record.gap} 天</span>
                                     </div>
                                 </div>
-                                <button onclick="switchTab('delivery')" class="text-cyan-400 hover:underline text-[11px] font-bold block">前往交期追蹤總表進行進階管理 →</button>
+                                <button onclick="switchTab('delivery')" class="text-cyan-600 hover:underline text-[11px] font-bold block">前往交期追蹤總表進行進階管理 →</button>
                             </div>
                         `;
                     } else {
-                        html = `<p class="text-slate-400">查無匹配的 Tool ID「${matchedId}」。請先點選 <strong>Delivery Tracking</strong> 載入示範大數據庫。</p>`;
+                        html = `<p class="text-slate-500">查無匹配的 Tool ID「${matchedId}」。請先點選 <strong>Delivery Tracking</strong> 載入大數據庫。</p>`;
                     }
                 }
                 else {
                     html = `
-                        <p class="font-bold text-slate-200">UMC 採購核決權限最高層級級距規範核校：</p>
-                        <div class="overflow-x-auto border border-slate-800 rounded-lg">
-                            <table class="w-full text-left text-[11px] bg-slate-900">
-                                <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider text-[10px]">
+                        <p class="font-bold text-slate-800">UMC 採購核決權限最高層級級距規範核校：</p>
+                        <div class="overflow-x-auto border border-slate-200 rounded-lg shadow-sm">
+                            <table class="w-full text-left text-[11px] bg-white">
+                                <thead class="bg-slate-900 text-white uppercase tracking-wider text-[10px] font-bold">
                                     <tr>
                                         <th class="p-2">核決權責主管層級</th>
                                         <th class="p-2 text-right">核決金額限制範圍 (TWD)</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-800 text-slate-300 font-medium">
+                                <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
                                     <tr><td class="p-2">採購三級主管</td><td class="p-2 text-right">25萬(含)以下</td></tr>
                                     <tr><td class="p-2">採購二級主管</td><td class="p-2 text-right">25萬 ~ 100萬(含) Poles</td></tr>
                                     <tr><td class="p-2">資材處一級主管</td><td class="p-2 text-right">100萬 ~ 1000萬(含)以下</td></tr>
                                     <tr><td class="p-2">該功能組織最高權責主管</td><td class="p-2 text-right">1000萬 ~ 4000萬(含)以下</td></tr>
-                                    <tr class="text-amber-400 font-bold"><td class="p-2">董事長</td><td class="p-2 text-right font-black">4000萬以上</td></tr>
+                                    <tr class="bg-amber-50 text-amber-800 font-bold"><td class="p-2">董事長</td><td class="p-2 text-right font-black">4000萬以上</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -614,33 +628,28 @@
         }
 
         // ========================================================
-        // PRICING DB - PRE-BAKED DETAILED REALISTIC HIGH-FI DATA
+        // PRICING DB - SAMPLE DATA WITH 12X & 8-INCH FABS
         // ========================================================
         function injectSampleExcelData() {
             state.pricingData = [
-                { site: '12A', entity: 'UMC HQ', toolId: 'PH-EUV-01', vendor: 'ASML', model: 'Twinscan EXE:5000', year: '2026', poNum: 'PO-26001', price: 350000000, saving: 15.2, incentive: 5.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-1' },
-                { site: '12A', entity: 'UMC HQ', toolId: 'PH-EUV-02', vendor: 'ASML', model: 'Twinscan NXE:3600D', year: '2025', poNum: 'PO-25012', price: 180000000, saving: 12.0, incentive: 4.2, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-2' },
-                { site: '12i', entity: 'UMC SG', toolId: 'PH-DUV-02', vendor: 'ASML', model: 'Twinscan NXT:1980Di', year: '2024', poNum: 'PO-24110', price: 62000000, saving: 8.8, incentive: 2.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-4' },
+                { site: '12A', entity: 'UMC HQ', toolId: 'PH-EUV-01', vendor: 'ASML', model: 'Twinscan EXE:5000', year: '2026', poNum: 'PO-26001', price: 350000000, saving: 15.2, incentive: 5.0, priceUp: 0, meetingLink: '#' },
+                { site: '12A', entity: 'UMC HQ', toolId: 'PH-EUV-02', vendor: 'ASML', model: 'Twinscan NXE:3600D', year: '2025', poNum: 'PO-25012', price: 180000000, saving: 12.0, incentive: 4.2, priceUp: 0, meetingLink: '#' },
+                { site: '12i', entity: 'UMC SG', toolId: 'PH-DUV-02', vendor: 'ASML', model: 'Twinscan NXT:1980Di', year: '2024', poNum: 'PO-24110', price: 62000000, saving: 8.8, incentive: 2.0, priceUp: 0, meetingLink: '#' },
                 
-                // 12X 數據增強
-                { site: '12X', entity: 'UMC Fab12X', toolId: 'PH-DUV-03', vendor: 'ASML', model: 'Twinscan NXT:2100i', year: '2026', poNum: 'PO-26015', price: 92000000, saving: 14.1, incentive: 4.8, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-5' },
-                { site: '12X', entity: 'UMC Fab12X', toolId: 'ET-WET-01', vendor: 'LAM', model: 'DaVinci Clean System', year: '2025', poNum: 'PO-25045', price: 4800000, saving: 8.0, incentive: 2.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-10' },
-                { site: '12X', entity: 'UMC Fab12X', toolId: 'TF-CMP-01', vendor: 'AMAT', model: 'Reflexion LK CMP', year: '2025', poNum: 'PO-25077', price: 4300000, saving: 8.5, incentive: 2.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-15' },
+                { site: '12X', entity: 'UMC Fab12X', toolId: 'PH-DUV-03', vendor: 'ASML', model: 'Twinscan NXT:2100i', year: '2026', poNum: 'PO-26015', price: 92000000, saving: 14.1, incentive: 4.8, priceUp: 0, meetingLink: '#' },
+                { site: '12X', entity: 'UMC Fab12X', toolId: 'ET-WET-01', vendor: 'LAM', model: 'DaVinci Clean System', year: '2025', poNum: 'PO-25045', price: 4800000, saving: 8.0, incentive: 2.0, priceUp: 0, meetingLink: '#' },
+                { site: '12X', entity: 'UMC Fab12X', toolId: 'TF-CMP-01', vendor: 'AMAT', model: 'Reflexion LK CMP', year: '2025', poNum: 'PO-25077', price: 4300000, saving: 8.5, incentive: 2.0, priceUp: 0, meetingLink: '#' },
                 
-                // 聯電八吋廠別數據增強 (8A, 8C, 8D, 8F, 8S)
-                { site: '8A', entity: 'UMC Fab8A', toolId: 'NKN-STP-01', vendor: 'NIKON', model: 'NSR-S210D Stepper', year: '2025', poNum: 'PO-25801', price: 3200000, saving: 9.5, incentive: 1.5, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-26' },
-                { site: '8C', entity: 'UMC Fab8C', toolId: 'TF-FUR-08C', vendor: 'TEL', model: 'INDY Plus Furnace', year: '2024', poNum: 'PO-24802', price: 2100000, saving: 11.2, incentive: 2.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-27' },
-                { site: '8D', entity: 'UMC Fab8D', toolId: 'ET-DRY-8D', vendor: 'LAM', model: 'Alliance 9400 Etcher', year: '2025', poNum: 'PO-25803', price: 1850000, saving: 7.0, incentive: 1.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-28' },
-                { site: '8F', entity: 'UMC Fab8F', toolId: 'PH-STEP-8F', vendor: 'ASML', model: 'Twinscan XT:400G', year: '2026', poNum: 'PO-26804', price: 15400000, saving: 13.5, incentive: 4.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-29' },
-                { site: '8S', entity: 'UMC Fab8S', toolId: 'ME-MET-8S', vendor: 'KLA', model: 'Quantox Oxide Monitoring', year: '2025', poNum: 'PO-25805', price: 1200000, saving: 6.8, incentive: 1.1, priceUp: 2.4, meetingLink: 'https://teams.microsoft.com/meeting-mock-30' },
-                { site: '8N', entity: 'HeJian Suzhou', toolId: 'TF-CVD-8N', vendor: 'AMAT', model: 'Producer SE CVD (8\")', year: '2026', poNum: 'PO-26806', price: 2900000, saving: 10.0, incentive: 3.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-31' },
+                { site: '8A', entity: 'UMC Fab8A', toolId: 'NKN-STP-01', vendor: 'NIKON', model: 'NSR-S210D Stepper', year: '2025', poNum: 'PO-25801', price: 3200000, saving: 9.5, incentive: 1.5, priceUp: 0, meetingLink: '#' },
+                { site: '8C', entity: 'UMC Fab8C', toolId: 'TF-FUR-08C', vendor: 'TEL', model: 'INDY Plus Furnace', year: '2024', poNum: 'PO-24802', price: 2100000, saving: 11.2, incentive: 2.0, priceUp: 0, meetingLink: '#' },
+                { site: '8D', entity: 'UMC Fab8D', toolId: 'ET-DRY-8D', vendor: 'LAM', model: 'Alliance 9400 Etcher', year: '2025', poNum: 'PO-25803', price: 1850000, saving: 7.0, incentive: 1.0, priceUp: 0, meetingLink: '#' },
+                { site: '8F', entity: 'UMC Fab8F', toolId: 'PH-STEP-8F', vendor: 'ASML', model: 'Twinscan XT:400G', year: '2026', poNum: 'PO-26804', price: 15400000, saving: 13.5, incentive: 4.0, priceUp: 0, meetingLink: '#' },
+                { site: '8S', entity: 'UMC Fab8S', toolId: 'ME-MET-8S', vendor: 'KLA', model: 'Quantox Oxide Monitoring', year: '2025', poNum: 'PO-25805', price: 1200000, saving: 6.8, incentive: 1.1, priceUp: 2.4, meetingLink: '#' },
+                { site: '8N', entity: 'HeJian Suzhou', toolId: 'TF-CVD-8N', vendor: 'AMAT', model: 'Producer SE CVD (8\")', year: '2026', poNum: 'PO-26806', price: 2900000, saving: 10.0, incentive: 3.0, priceUp: 0, meetingLink: '#' },
 
-                { site: '12A', entity: 'UMC HQ', toolId: 'ET-DRY-01', vendor: 'LAM', model: 'Vantex Dielectric Etcher', year: '2025', poNum: 'PO-25102', price: 8200000, saving: 7.5, incentive: 1.5, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-6' },
-                { site: '12M', entity: 'UMC Japan', toolId: 'ET-DRY-04', vendor: 'LAM', model: 'Coronus Bevel Clean', year: '2026', poNum: 'PO-26022', price: 5400000, saving: 11.0, incentive: 3.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-9' },
-                { site: '12A', entity: 'UMC HQ', toolId: 'TF-CVD-01', vendor: 'AMAT', model: 'Producer SE CVD', year: '2025', poNum: 'PO-25114', price: 5800000, saving: 9.5, incentive: 2.5, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-11' },
-                { site: '12i', entity: 'UMC SG', toolId: 'TF-ALD-01', vendor: 'AMAT', model: 'Olympia ALD Module', year: '2025', poNum: 'PO-25401', price: 8900000, saving: 11.2, incentive: 3.8, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-13' },
-                { site: '12A', entity: 'UMC HQ', toolId: 'LD-CT-01', vendor: 'TEL', model: 'Clean Track LITHIUS Pro-Z', year: '2025', poNum: 'PO-25188', price: 6800000, saving: 10.0, incentive: 3.0, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-16' },
-                { site: '12A', entity: 'UMC HQ', toolId: 'ME-INS-01', vendor: 'KLA', model: 'Surfscan SP7 Defect Inspection', year: '2025', poNum: 'PO-25601', price: 7800000, saving: 9.0, incentive: 2.5, priceUp: 0, meetingLink: 'https://teams.microsoft.com/meeting-mock-21' }
+                { site: '12A', entity: 'UMC HQ', toolId: 'ET-DRY-01', vendor: 'LAM', model: 'Vantex Dielectric Etcher', year: '2025', poNum: 'PO-25102', price: 8200000, saving: 7.5, incentive: 1.5, priceUp: 0, meetingLink: '#' },
+                { site: '12M', entity: 'UMC Japan', toolId: 'ET-DRY-04', vendor: 'LAM', model: 'Coronus Bevel Clean', year: '2026', poNum: 'PO-26022', price: 5400000, saving: 11.0, incentive: 3.0, priceUp: 0, meetingLink: '#' },
+                { site: '12A', entity: 'UMC HQ', toolId: 'TF-CVD-01', vendor: 'AMAT', model: 'Producer SE CVD', year: '2025', poNum: 'PO-25114', price: 5800000, saving: 9.5, incentive: 2.5, priceUp: 0, meetingLink: '#' }
             ];
             document.getElementById('btn-export').classList.remove('hidden');
             document.getElementById('btn-toggle-chart').classList.remove('hidden');
@@ -696,26 +705,26 @@
             const data = getFilteredPricingDataset();
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-600">No matching records found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="12" class="p-6 text-center text-slate-400 bg-white">No matching records found.</td></tr>`;
                 return;
             }
 
             data.forEach(d => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900 transition-all border-b border-slate-800/40";
+                tr.className = "hover:bg-slate-50 transition-all border-b border-slate-200 bg-white text-slate-700";
                 tr.innerHTML = `
-                    <td class="p-3 font-bold text-slate-200">${d.site}</td>
-                    <td class="p-3 text-slate-400 text-xs">${d.entity}</td>
-                    <td class="p-3 font-mono font-bold text-slate-400">${d.toolId}</td>
-                    <td class="p-3 font-bold text-blue-400 cursor-pointer hover:underline" onclick="quickFilterVendor('${d.vendor}')">${d.vendor}</td>
-                    <td class="p-3 text-slate-300 max-w-[150px] truncate" title="${d.model}">${d.model}</td>
-                    <td class="p-3 text-slate-400">${d.year}</td>
-                    <td class="p-3 font-mono text-slate-500">${d.poNum}</td>
-                    <td class="p-3 text-right font-black text-amber-400">USD ${d.price.toLocaleString()}</td>
-                    <td class="p-3 text-right font-semibold text-emerald-400">${d.saving}%</td>
-                    <td class="p-3 text-right font-semibold text-cyan-400">${d.incentive}%</td>
-                    <td class="p-3 text-right font-semibold text-rose-400">${d.priceUp}%</td>
-                    <td class="p-3 text-center"><a href="${d.meetingLink}" target="_blank" class="text-blue-500 hover:text-blue-400 text-xs"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></td>
+                    <td class="p-3 font-bold text-slate-900">${d.site}</td>
+                    <td class="p-3 text-slate-500 text-xs">${d.entity}</td>
+                    <td class="p-3 font-mono font-bold text-slate-600">${d.toolId}</td>
+                    <td class="p-3 font-bold text-blue-600 cursor-pointer hover:underline" onclick="quickFilterVendor('${d.vendor}')">${d.vendor}</td>
+                    <td class="p-3 text-slate-600 max-w-[150px] truncate" title="${d.model}">${d.model}</td>
+                    <td class="p-3 text-slate-500">${d.year}</td>
+                    <td class="p-3 font-mono text-slate-400">${d.poNum}</td>
+                    <td class="p-3 text-right font-black text-amber-600">USD ${d.price.toLocaleString()}</td>
+                    <td class="p-3 text-right font-semibold text-emerald-600">${d.saving}%</td>
+                    <td class="p-3 text-right font-semibold text-cyan-600">${d.incentive}%</td>
+                    <td class="p-3 text-right font-semibold text-rose-600">${d.priceUp}%</td>
+                    <td class="p-3 text-center"><a href="${d.meetingLink}" class="text-blue-600 hover:text-blue-500 text-xs"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -751,7 +760,6 @@
         function renderPricingChartHighPrecision() {
             const data = getFilteredPricingDataset();
             const labels = data.map(d => d.toolId);
-            
             const poAmounts = data.map(d => d.price);
             const savings = data.map(d => d.saving);
             const incentives = data.map(d => d.incentive);
@@ -765,24 +773,24 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'PO Amount (USD)', data: poAmounts, backgroundColor: 'rgba(59, 130, 246, 0.4)', borderColor: '#3b82f6', borderWidth: 1.5, borderRadius: 4, yAxisID: 'y' },
-                        { label: 'Saving %', data: savings, type: 'line', borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 2.5, yAxisID: 'y1' },
-                        { label: 'Incentive %', data: incentives, type: 'line', borderColor: '#06b6d4', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 2.5, yAxisID: 'y1' },
-                        { label: 'Price Up %', data: priceUps, type: 'line', borderColor: '#f43f5e', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 2.5, yAxisID: 'y1' }
+                        { label: 'PO Amount (USD)', data: poAmounts, backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: '#3b82f6', borderWidth: 1.5, borderRadius: 4, yAxisID: 'y' },
+                        { label: 'Saving %', data: savings, type: 'line', borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, yAxisID: 'y1' },
+                        { label: 'Incentive %', data: incentives, type: 'line', borderColor: '#06b6d4', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, yAxisID: 'y1' },
+                        { label: 'Price Up %', data: priceUps, type: 'line', borderColor: '#f43f5e', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, yAxisID: 'y1' }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 8 } } },
+                        x: { grid: { display: false }, ticks: { color: '#475569', font: { size: 8 } } },
                         y: { 
                             type: 'linear', 
                             position: 'left', 
-                            grid: { color: 'rgba(51, 65, 85, 0.1)' }, 
-                            title: { display: true, text: 'PO Amount (USD)', color: '#94a3b8', font: { size: 9, weight: 'bold' } },
+                            grid: { color: '#f1f5f9' }, 
+                            title: { display: true, text: 'PO Amount (USD)', color: '#475569', font: { size: 9, weight: 'bold' } },
                             ticks: { 
-                                color: '#64748b', 
+                                color: '#475569', 
                                 font: { size: 8 },
                                 callback: function(value) {
                                     if (value >= 1e6) return '$' + (value / 1e6).toFixed(1) + 'M';
@@ -795,13 +803,16 @@
                             type: 'linear', 
                             position: 'right', 
                             grid: { display: false }, 
-                            title: { display: true, text: 'Metrics Rate (%)', color: '#94a3b8', font: { size: 9, weight: 'bold' } },
-                            ticks: { color: '#64748b', font: { size: 8 }, callback: function(value) { return value + '%'; } } 
+                            title: { display: true, text: 'Metrics Rate (%)', color: '#475569', font: { size: 9, weight: 'bold' } },
+                            ticks: { color: '#475569', font: { size: 8 }, callback: function(value) { return value + '%'; } } 
                         }
                     },
                     plugins: { 
-                        legend: { labels: { color: '#94a3b8', font: { size: 9 } } },
+                        legend: { labels: { color: '#475569', font: { size: 9 } } },
                         tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
                             callbacks: {
                                 label: function(context) {
                                     let label = context.dataset.label || '';
@@ -825,16 +836,16 @@
             if(data.length === 0) return;
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
-            XcontentXLSX.book_append_sheet(wb, ws, "Pricing Extract");
+            XLSX.utils.book_append_sheet(wb, ws, "Pricing Extract");
             XLSX.writeFile(wb, "Nexus_Pricing_Data.xlsx");
         }
 
         // ========================================================
-        // DELIVERY TRACKING - PRE-BAKED CORRESPONDING RECORDS
+        // DELIVERY TRACKING SEQUENCE MODULE
         // ========================================================
         function injectSampleDeliveryData() {
             state.deliveryData = [
-                { site: '12A', project: 'Phase 6 Expansion', entity: 'UMC HQ', toolId: 'PH-EUV-01', vendor: 'ASML', reqDate: '2026-08-15', shipping: 'Air Freight', vendorDate: '2026-08-25', gap: 10, isModified: true, history: ['2026-08-15', '2026-08-20', '2026-08-25'] },
+                { site: '12A', project: 'Phase 6 Expansion', entity: 'UMC HQ', toolId: 'PH-EUV-01', vendor: 'ASML', reqDate: '2026-08-15', shipping: 'Air Freight', vendorDate: '2026-08-25', gap: 10, isModified: true, history: ['2026-08-15', '2026-08-25'] },
                 { site: '12X', project: 'Fab12X N20', entity: 'UMC Fab12X', toolId: 'PH-DUV-03', vendor: 'ASML', reqDate: '2026-12-05', shipping: 'Air Freight', vendorDate: '2026-12-05', gap: 0, isModified: false, history: ['2026-12-05'] },
                 { site: '8F', project: 'Hsinchu 8-inch Legacy', entity: 'UMC Fab8F', toolId: 'PH-STEP-8F', vendor: 'ASML', reqDate: '2026-07-01', shipping: 'Maritime', vendorDate: '2026-07-08', gap: 7, isModified: true, history: ['2026-07-01', '2026-07-08'] },
                 { site: '8A', project: 'Hsinchu 8-inch Legacy', entity: 'UMC Fab8A', toolId: 'NKN-STP-01', vendor: 'NIKON', reqDate: '2026-06-12', shipping: 'Air Freight', vendorDate: '2026-06-10', gap: -2, isModified: true, history: ['2026-06-12', '2026-06-10'] },
@@ -855,13 +866,12 @@
                     const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
                     
                     state.deliveryData = rows.map(r => {
-                        const tId = String(r['Tool ID'] || 'N/A');
                         const newVDate = String(r['Vendor Reply Delivery Date'] || '2026-06-01');
                         return {
                             site: String(r['Site'] || '12A'),
                             project: String(r['Project'] || 'Phase 6 Expansion'),
                             entity: String(r['Entity'] || 'UMC Corp'),
-                            toolId: tId,
+                            toolId: String(r['Tool ID'] || 'N/A'),
                             vendor: String(r['Vendor'] || 'ASML'),
                             reqDate: String(r['Req. Delivery Date'] || '2026-06-01'),
                             shipping: String(r['Shipping Method'] || 'Air'),
@@ -887,7 +897,7 @@
             });
             document.getElementById('summary-push-count').innerText = pushes;
             document.getElementById('summary-pull-count').innerText = pulls;
-            document.getElementById('summary-text-main').innerText = descriptiveNodes.length ? descriptiveNodes.slice(0, 3).join(', ') + ' detected.' : 'All system pipelines matching baseline projections.';
+            document.getElementById('summary-text-main').innerText = descriptiveNodes.length ? descriptiveNodes.slice(0, 3).join(', ') + ' detected.' : 'All pipelines baseline matching.';
         }
 
         function filterDeliveryTable() {
@@ -908,23 +918,23 @@
             });
 
             if(filtered.length === 0) {
-                tBody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-600">No synchronized delivery entries found.</td></tr>`;
+                tBody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 bg-white">No entries found.</td></tr>`;
                 return;
             }
 
             filtered.forEach(d => {
-                const dateClass = d.isModified ? "text-blue-400 font-bold cursor-pointer underline" : "text-slate-300 font-medium cursor-pointer hover:text-blue-300 underline";
-                const gapClass = d.gap > 0 ? "text-rose-500 font-bold text-right" : d.gap < 0 ? "text-emerald-500 font-bold text-right" : "text-slate-500 text-right";
+                const dateClass = d.isModified ? "text-blue-600 font-bold cursor-pointer underline" : "text-slate-700 font-medium cursor-pointer hover:text-blue-600 underline";
+                const gapClass = d.gap > 0 ? "text-rose-600 font-bold text-right" : d.gap < 0 ? "text-emerald-600 font-bold text-right" : "text-slate-400 text-right";
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900 transition-all border-b border-slate-800/40";
+                tr.className = "hover:bg-slate-50 transition-all border-b border-slate-200 bg-white text-slate-700";
                 tr.innerHTML = `
-                    <td class="p-3 font-bold text-slate-200">${d.site}</td>
-                    <td class="p-3 text-slate-400 text-xs">${d.project}</td>
-                    <td class="p-3 text-slate-500">${d.entity}</td>
-                    <td class="p-3 font-mono font-bold text-slate-300">${d.toolId}</td>
-                    <td class="p-3 font-mono text-slate-400">${d.reqDate}</td>
-                    <td class="p-3 text-slate-500 text-xs">${d.shipping}</td>
-                    <td class="p-3 font-mono ${dateClass}" onclick="triggerTimelineHistoryModal('${d.toolId}')" title="Click to view historic updates">${d.vendorDate} <i class="fa-solid fa-clock-rotate-left text-[9px] ml-0.5 opacity-60"></i></td>
+                    <td class="p-3 font-bold text-slate-900">${d.site}</td>
+                    <td class="p-3 text-slate-500 text-xs">${d.project}</td>
+                    <td class="p-3 text-slate-400">${d.entity}</td>
+                    <td class="p-3 font-mono font-bold text-slate-700">${d.toolId}</td>
+                    <td class="p-3 font-mono text-slate-500">${d.reqDate}</td>
+                    <td class="p-3 text-slate-400 text-xs">${d.shipping}</td>
+                    <td class="p-3 font-mono ${dateClass}" onclick="triggerTimelineHistoryModal('${d.toolId}')">${d.vendorDate} <i class="fa-solid fa-clock-rotate-left text-[9px] ml-0.5 opacity-60"></i></td>
                     <td class="p-3 font-mono ${gapClass}">${d.gap > 0 ? '+' + d.gap : d.gap} d</td>
                 `;
                 tBody.appendChild(tr);
@@ -934,7 +944,7 @@
         function triggerTimelineHistoryModal(toolId) {
             const record = state.deliveryData.find(d => d.toolId === toolId);
             if(!record) return;
-            alert(`[Historic Logistics Sequence Audit — ${toolId}]\n\nHistorical tracked upload timelines:\n` + record.history.map((h, i) => `Sequence Entry [${i+1}]: ${h}`).join('\n') + `\n\nCurrent active target: ${record.vendorDate}`);
+            alert(`[Historic Logistics Sequence Audit — ${toolId}]\n\nHistorical tracked timelines:\n` + record.history.map((h, i) => `Entry [${i+1}]: ${h}`).join('\n'));
         }
 
         function resetDeliveryFilters() {
@@ -946,7 +956,7 @@
         }
 
         // ==========================================
-        // CALENDAR AGENDA SYSTEM WORKFLOW MANAGEMENT
+        // CALENDAR AGENDA SYSTEM WORKFLOW
         // ==========================================
         function renderScheduleCalendar() {
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -956,19 +966,19 @@
                 const dayEvents = state.scheduleEvents.filter(ev => ev.day === d);
                 
                 if(dayEvents.length === 0) {
-                    dayBox.innerHTML = `<div class="text-[9px] text-slate-700 italic p-2">No items block</div>`;
+                    dayBox.innerHTML = `<div class="text-[9px] text-slate-300 italic p-2">No items block</div>`;
                     return;
                 }
 
                 dayEvents.forEach(ev => {
                     const block = document.createElement('div');
                     block.id = `evt-${ev.id}`;
-                    block.className = "bg-slate-900 border border-slate-800 p-2 rounded text-[10px] space-y-1 transition-all";
+                    block.className = "bg-slate-50 border border-slate-200 p-2 rounded text-[10px] space-y-1 transition-all shadow-sm text-slate-700";
                     block.innerHTML = `
-                        <div class="flex justify-between items-center text-[8px] font-mono font-bold text-slate-500">
+                        <div class="flex justify-between items-center text-[8px] font-mono font-bold text-slate-400">
                             <span>${ev.time}</span>
                         </div>
-                        <p class="text-slate-300 font-medium leading-tight">${ev.title}</p>
+                        <p class="text-slate-800 font-medium leading-tight">${ev.title}</p>
                     `;
                     dayBox.appendChild(block);
                 });
@@ -980,43 +990,42 @@
                 const el = document.getElementById(`evt-${ev.id}`);
                 if(!el) return;
                 if(ev.type === typeTag) {
-                    el.className = "bg-blue-950/40 border-blue-500 p-2 rounded text-[10px] space-y-1 scale-[1.02] transition-all ring-1 ring-blue-500/20";
+                    el.className = "bg-blue-50 border-blue-400 p-2 rounded text-[10px] space-y-1 scale-[1.02] transition-all ring-2 ring-blue-400/20 shadow-md text-blue-900";
                 } else {
-                    el.className = "bg-slate-900 border border-slate-800 p-2 rounded text-[10px] space-y-1 opacity-40 transition-all";
+                    el.className = "bg-slate-50 border border-slate-100 p-2 rounded text-[10px] space-y-1 opacity-30 transition-all";
                 }
             });
             setTimeout(() => {
                 state.scheduleEvents.forEach(ev => {
                     const el = document.getElementById(`evt-${ev.id}`);
-                    if(el) el.className = "bg-slate-900 border border-slate-800 p-2 rounded text-[10px] space-y-1 transition-all";
+                    if(el) el.className = "bg-slate-50 border border-slate-200 p-2 rounded text-[10px] space-y-1 transition-all shadow-sm text-slate-700";
                 });
             }, 3500);
         }
 
         // ==========================================
-        // INDUSTRY NEWS ENGINE STRUCTURAL AGGREGATES
+        // INDUSTRY NEWS ENGINE
         // ==========================================
         function renderNewsFeed(category) {
             const grid = document.getElementById('news-matrix-grid');
             grid.innerHTML = '';
-            
             const targeted = state.newsData.filter(n => category === 'ALL' || n.category === category);
             
             targeted.forEach(n => {
                 const card = document.createElement('div');
-                card.className = "bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-3 shadow-lg";
+                card.className = "bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between space-y-3 shadow-sm";
                 card.innerHTML = `
                     <div class="space-y-2">
                         <div class="flex justify-between items-center text-[9px]">
-                            <span class="px-2 py-0.5 rounded bg-slate-900 font-bold text-blue-400 border border-slate-800">${n.tag}</span>
-                            <span class="text-slate-600 font-mono">Live Intel</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-100 font-bold text-blue-600 border border-slate-200">${n.tag}</span>
+                            <span class="text-slate-400 font-mono">Live Intel</span>
                         </div>
-                        <h3 class="text-xs font-bold text-slate-200 leading-snug">${n.title}</h3>
-                        <div class="bg-slate-900/80 p-2.5 rounded border border-slate-800/50 text-[11px] text-slate-300 tracking-wide">
+                        <h3 class="text-xs font-bold text-slate-900 leading-snug">${n.title}</h3>
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-150 text-[11px] text-slate-600 tracking-wide">
                             ${n.insight}
                         </div>
                     </div>
-                    <a href="${n.link}" target="_blank" class="w-full text-center bg-slate-900 hover:bg-slate-850 text-blue-400 border border-slate-800 text-[11px] py-1.5 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5">
+                    <a href="${n.link}" target="_blank" class="w-full text-center bg-slate-50 hover:bg-slate-100 text-blue-600 border border-slate-200 text-[11px] py-1.5 rounded-lg font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm">
                         Open Google News Stream <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                     </a>
                 `;
@@ -1026,14 +1035,14 @@
 
         function filterNews(cat) {
             document.querySelectorAll('.news-tab-btn').forEach(btn => {
-                btn.className = "news-tab-btn bg-slate-950 hover:bg-slate-900 border border-slate-800 font-bold text-[10px] px-2.5 py-1 rounded transition-all text-slate-400";
+                btn.className = "news-tab-btn bg-white hover:bg-slate-100 border border-slate-200 font-bold text-[10px] px-2.5 py-1 rounded shadow-sm transition-all text-slate-600";
             });
-            event.target.className = "news-tab-btn bg-blue-600 text-white font-bold text-[10px] px-2.5 py-1 rounded transition-all";
+            event.target.className = "news-tab-btn bg-blue-600 text-white font-bold text-[10px] px-2.5 py-1 rounded shadow-sm transition-all";
             renderNewsFeed(cat);
         }
 
         // ==========================================
-        // DYNAMIC CONTEXTUAL POWERPOINT CODE BLOCK
+        // DYNAMIC EXECUTIVE LIGHT PPTX GENERATION
         // ==========================================
         function triggerInlinePPTXGeneration(vendorName) {
             try {
@@ -1046,30 +1055,32 @@
                 let sumValue = matches.reduce((acc, c) => acc + c.price, 0);
                 let avgSavings = matches.length ? (matches.reduce((acc, c) => acc + c.saving, 0) / matches.length).toFixed(1) : '0.0';
 
+                // Slide 1 - Title (Light Palette)
                 let s1 = pptx.addSlide();
-                s1.background = { fill: "0F172A" };
-                s1.addText("UMC COGNITIVE INSIGHT NET", { x: 1.0, y: 2.2, fontSize: 13, color: "3B82F6", bold: true, tracking: 2 });
-                s1.addText(`${vendorName.toUpperCase()} Procurement Framework Statement`, { x: 1.0, y: 2.7, fontSize: 28, color: "F8FAFC", bold: true });
-                s1.addText("Generated via Nexus Intelligent Automation Model Framework", { x: 1.0, y: 4.0, fontSize: 11, color: "64748B" });
+                s1.background = { fill: "F8FAFC" };
+                s1.addText("UMC COGNITIVE INSIGHT NET", { x: 1.0, y: 2.2, fontSize: 13, color: "2563EB", bold: true, tracking: 2 });
+                s1.addText(`${vendorName.toUpperCase()} Procurement Framework Statement`, { x: 1.0, y: 2.7, fontSize: 28, color: "0F172A", bold: true });
+                s1.addText("Generated via Nexus Intelligent Automation Model Framework (Light Theme Edition)", { x: 1.0, y: 4.0, fontSize: 11, color: "64748B" });
 
+                // Slide 2 - Data Core
                 let s2 = pptx.addSlide();
-                s2.background = { fill: "0F172A" };
-                s2.addText(`DATA TRACE LEDGER: ${vendorName.toUpperCase()} CAPEX OVERVIEW`, { x: 0.6, y: 0.5, fontSize: 16, color: "F8FAFC", bold: true });
+                s2.background = { fill: "F8FAFC" };
+                s2.addText(`DATA TRACE LEDGER: ${vendorName.toUpperCase()} CAPEX OVERVIEW`, { x: 0.6, y: 0.5, fontSize: 16, color: "0F172A", bold: true });
 
-                s2.addShape(pptx.shapes.RECTANGLE, { x: 0.6, y: 1.1, w: 3.5, h: 1.1, fill: "1E293B", line: { color: "334155" } });
-                s2.addText("AGGREGATE PRICE VOLUMES", { x: 0.8, y: 1.3, fontSize: 9, color: "94A3B8", bold: true });
-                s2.addText(`USD ${sumValue.toLocaleString()}`, { x: 0.8, y: 1.7, fontSize: 16, color: "F59E0B", bold: true });
+                s2.addShape(pptx.shapes.RECTANGLE, { x: 0.6, y: 1.1, w: 3.5, h: 1.1, fill: "FFFFFF", line: { color: "CBD5E1" } });
+                s2.addText("AGGREGATE PRICE VOLUMES", { x: 0.8, y: 1.3, fontSize: 9, color: "64748B", bold: true });
+                s2.addText(`USD ${sumValue.toLocaleString()}`, { x: 0.8, y: 1.7, fontSize: 16, color: "D97706", bold: true });
 
-                s2.addShape(pptx.shapes.RECTANGLE, { x: 4.4, y: 1.1, w: 3.5, h: 1.1, fill: "1E293B", line: { color: "334155" } });
-                s2.addText("MEAN AUDIT PORTFOLIO SAVINGS", { x: 4.6, y: 1.3, fontSize: 9, color: "94A3B8", bold: true });
-                s2.addText(`${avgSavings} %`, { x: 4.6, y: 1.7, fontSize: 16, color: "10B981", bold: true });
+                s2.addShape(pptx.shapes.RECTANGLE, { x: 4.4, y: 1.1, w: 3.5, h: 1.1, fill: "FFFFFF", line: { color: "CBD5E1" } });
+                s2.addText("MEAN AUDIT PORTFOLIO SAVINGS", { x: 4.6, y: 1.3, fontSize: 9, color: "64748B", bold: true });
+                s2.addText(`${avgSavings} %`, { x: 4.6, y: 1.7, fontSize: 16, color: "059669", bold: true });
 
                 let gridRows = [
                     [
-                        { text: "Site", options: { bold: true, fill: "1E293B", color: "F8FAFC" } },
-                        { text: "Tool ID", options: { bold: true, fill: "1E293B", color: "F8FAFC" } },
-                        { text: "Model Mapping Sequence", options: { bold: true, fill: "1E293B", color: "F8FAFC" } },
-                        { text: "Price (USD)", options: { bold: true, fill: "1E293B", color: "F8FAFC" } }
+                        { text: "Site", options: { bold: true, fill: "0F172A", color: "FFFFFF" } },
+                        { text: "Tool ID", options: { bold: true, fill: "0F172A", color: "FFFFFF" } },
+                        { text: "Model Mapping Sequence", options: { bold: true, fill: "0F172A", color: "FFFFFF" } },
+                        { text: "Price (USD)", options: { bold: true, fill: "0F172A", color: "FFFFFF" } }
                     ]
                 ];
 
@@ -1078,7 +1089,7 @@
                 });
 
                 if(gridRows.length > 1) {
-                    s2.addTable(gridRows, { x: 0.6, y: 2.6, w: 12.0, colW: [1.5, 2.0, 5.0, 3.5], border: { color: "334155", pt: 1 }, color: "CBD5E1", fontSize: 10 });
+                    s2.addTable(gridRows, { x: 0.6, y: 2.6, w: 12.0, colW: [1.5, 2.0, 5.0, 3.5], border: { color: "CBD5E1", pt: 1 }, color: "334155", fontSize: 10 });
                 }
 
                 pptx.writeFile({ fileName: `UMC_Nexus_Report_${vendorName}.pptx` });
