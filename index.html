@@ -19,7 +19,6 @@
 </head>
 <body class="w-screen h-screen overflow-hidden bg-slate-50 text-slate-800 flex select-none">
 
-    <!-- 左側側邊欄：維持深色調底色以保持專業工具艙的視覺安定感 -->
     <aside id="app-sidebar" class="w-12 sm:w-16 h-full bg-slate-900 flex flex-col justify-between items-center py-4 border-r border-slate-200 shrink-0 z-50 transition-all duration-300">
         <div class="flex flex-col items-center gap-6 w-full">
             <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-md cursor-pointer" onclick="switchTab('home')">
@@ -46,6 +45,10 @@
                     <i class="fa-solid fa-globe text-xs sm:text-sm"></i>
                     <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Industry News</span>
                 </button>
+                <button onclick="switchTab('finance')" id="nav-finance" class="tab-btn w-8 sm:w-10 h-8 sm:h-10 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all group relative">
+                    <i class="fa-solid fa-chart-line text-xs sm:text-sm"></i>
+                    <span class="absolute left-14 bg-slate-900 text-slate-100 text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded shadow-xl whitespace-nowrap hidden group-hover:block z-50 border border-slate-700">Equipment Financial Risk</span>
+                </button>
             </nav>
         </div>
 
@@ -60,10 +63,8 @@
         </div>
     </aside>
 
-    <!-- 主內文看版：淺色高質感底色底襯 -->
     <main class="flex-1 h-full flex flex-col bg-slate-50 overflow-hidden min-w-0 relative">
 
-        <!-- HOME TAB -->
         <div id="tab-home" class="content-pane w-full h-full flex flex-col justify-center items-center px-6 overflow-y-auto transition-all duration-300">
             <div id="home-search-wrapper" class="w-full max-w-xl text-center space-y-6 transition-all duration-300 transform translate-y-0">
                 <h1 class="text-3xl md:text-4xl font-black tracking-tight bg-gradient-to-r from-slate-800 via-blue-700 to-cyan-600 bg-clip-text text-transparent">
@@ -92,7 +93,6 @@
             </div>
         </div>
 
-        <!-- PRICING DB TAB -->
         <div id="tab-pricing" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4 min-w-0">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4 shrink-0">
                 <div class="flex items-center gap-3">
@@ -119,7 +119,6 @@
                 </div>
             </div>
 
-            <!-- 控制面板區塊 -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white p-3 rounded-xl border border-slate-200 shadow-sm shrink-0">
                 <div>
                     <label class="block text-[9px] uppercase font-bold text-slate-400 tracking-wider mb-1">Vendor / Model</label>
@@ -158,14 +157,12 @@
                 </div>
             </div>
 
-            <!-- 圖表外殼區塊 -->
             <div id="chart-wrapper-box" class="hidden bg-white border border-slate-200 rounded-xl p-4 shrink-0 shadow-sm transition-all">
                 <div class="relative h-56 w-full">
                     <canvas id="pricingChart"></canvas>
                 </div>
             </div>
 
-            <!-- 表格主區塊：導入高亮對比深色表頭 -->
             <div class="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px] shadow-sm">
                 <div class="overflow-x-auto w-full flex-1">
                     <table class="w-full text-left border-collapse text-[11px]">
@@ -198,7 +195,6 @@
             </div>
         </div>
 
-        <!-- DELIVERY TRACKING TAB -->
         <div id="tab-delivery" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4 min-w-0">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4 shrink-0">
                 <div>
@@ -216,7 +212,6 @@
                 </div>
             </div>
 
-            <!-- 看板總量資訊區 -->
             <div id="delivery-summary-box" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col justify-center shadow-sm">
                     <span class="text-[9px] uppercase tracking-wider font-bold text-slate-400">Operational Shifts Summary</span>
@@ -238,7 +233,6 @@
                 </div>
             </div>
 
-            <!-- 篩選列 -->
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm shrink-0">
                 <input type="text" id="del-filter-tool" oninput="filterDeliveryTable()" placeholder="Search Tool ID..." class="bg-slate-50 border border-slate-200 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-800">
                 <input type="text" id="del-filter-vendor" oninput="filterDeliveryTable()" placeholder="Search Vendor..." class="bg-slate-50 border border-slate-200 text-[11px] rounded px-2.5 py-1.5 outline-none focus:border-blue-500 text-slate-800">
@@ -269,7 +263,6 @@
                 </button>
             </div>
 
-            <!-- 交期追踪表：深色表頭突顯 -->
             <div class="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[220px] shadow-sm">
                 <div class="overflow-x-auto w-full flex-1">
                     <table class="w-full text-left border-collapse text-[11px]">
@@ -298,7 +291,6 @@
             </div>
         </div>
 
-        <!-- SCHEDULE TAB -->
         <div id="tab-schedule" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-3 shrink-0">
                 <div>
@@ -337,7 +329,6 @@
             </div>
         </div>
 
-        <!-- INDUSTRY NEWS TAB -->
         <div id="tab-news" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4">
             <div class="border-b border-slate-200 pb-3 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
@@ -356,7 +347,92 @@
             <div id="news-matrix-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
-        <!-- PORTAL & SOP TAB -->
+        <div id="tab-finance" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-4 min-w-0">
+            <div class="border-b border-slate-200 pb-4 shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-base font-black tracking-wide text-slate-900 uppercase">Supplier Financial Risk Control</h2>
+                    <p class="text-[11px] text-slate-500">Expert-curated quarterly reporting & comprehensive financial risk diagnostics matrix</p>
+                </div>
+                <div id="finance-vendor-selector" class="flex flex-wrap gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                    <button onclick="switchFinanceVendor('ASML')" class="finance-v-btn px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm border border-slate-200">ASML</button>
+                    <button onclick="switchFinanceVendor('AMAT')" class="finance-v-btn px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 hover:bg-slate-50">AMAT</button>
+                    <button onclick="switchFinanceVendor('KLA')" class="finance-v-btn px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 hover:bg-slate-50">KLA</button>
+                    <button onclick="switchFinanceVendor('TEL')" class="finance-v-btn px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 hover:bg-slate-50">TEL</button>
+                    <button onclick="switchFinanceVendor('LAM')" class="finance-v-btn px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 hover:bg-slate-50">LAM</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col lg:col-span-2">
+                    <div class="p-3 bg-slate-900 text-slate-100 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
+                        <span>Financial Status Overview</span>
+                        <span id="finance-company-full-name" class="text-[10px] text-slate-400 font-mono">ASML Holding N.V.</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-[11px]">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+                                    <th class="p-3">Financial Metric</th>
+                                    <th class="p-3">Previous Q</th>
+                                    <th class="p-3">Current Q (Latest)</th>
+                                    <th class="p-3">QoQ Shift</th>
+                                    <th class="p-3">YoY Shift</th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-metrics-body" class="divide-y divide-slate-100 font-medium text-slate-700">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm flex flex-col">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Quarterly Inflow Trend</span>
+                    <div class="relative flex-1 min-h-[140px] w-full">
+                        <canvas id="financeTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm md:col-span-1 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Revenue Distribution</span>
+                        <div id="finance-distribution-list" class="space-y-2.5">
+                            </div>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm md:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Structural Shift Analysis</span>
+                        <p id="finance-distribution-explanation" class="text-xs text-slate-600 leading-relaxed font-medium">
+                            </p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 mt-4 flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-semibold font-mono">Verified Node</span>
+                        <a id="finance-ir-link" href="#" target="_blank" class="text-[11px] font-bold text-blue-600 hover:text-blue-500 flex items-center gap-1">
+                            Official Investor Relations Hub <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-4">
+                <div class="border-b border-slate-100 pb-2 flex items-center gap-2 text-slate-900 font-bold text-xs uppercase tracking-wide">
+                    <i class="fa-solid fa-brain text-blue-500"></i> Market Outlook & Future Estimates Summary
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-150 space-y-1.5">
+                        <span class="font-bold text-slate-800 block">🔮 Market Forecast Guidance</span>
+                        <p id="finance-outlook-text" class="text-slate-600 font-medium"></p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-150 space-y-1.5">
+                        <span class="font-bold text-slate-800 block">💬 Earnings Call Executive Q&A Brief</span>
+                        <p id="finance-qna-text" class="text-slate-600 font-medium whitespace-pre-line"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="tab-portal" class="content-pane w-full h-full flex flex-col p-5 hidden overflow-y-auto space-y-5">
             <div>
                 <h2 class="text-base font-black tracking-wide text-slate-900 uppercase">Portal & SOP</h2>
@@ -382,17 +458,14 @@
                         <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-building-shield text-xs"></i></div>
                         <span class="text-[11px] font-bold text-slate-700">NDA Module</span>
                     </a>
-                    <!-- PR SYSTEM -->
                     <a href="#" onclick="alert('Rerouting to system node: PR SYSTEM Core Processing Engine')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-emerald-400 shadow-sm transition-all text-center group">
                         <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-file-invoice text-xs"></i></div>
                         <span class="text-[11px] font-bold text-slate-700">PR SYSTEM</span>
                     </a>
-                    <!-- UMC OU -->
                     <a href="#" onclick="alert('Rerouting to system node: UMC Organizational Unit Gateway')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-purple-400 shadow-sm transition-all text-center group">
                         <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-sitemap text-xs"></i></div>
                         <span class="text-[11px] font-bold text-slate-700">UMC OU</span>
                     </a>
-                    <!-- OS documentary -->
                     <a href="#" onclick="alert('Rerouting to system node: Operation System Documentary Vault')" class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:border-teal-400 shadow-sm transition-all text-center group">
                         <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 mb-2 group-hover:scale-105 transition-all"><i class="fa-solid fa-file-lines text-xs"></i></div>
                         <span class="text-[11px] font-bold text-slate-700">OS documentary</span>
@@ -452,13 +525,113 @@
                 { id: 5, category: 'CHAIN', tag: '供應鏈', title: 'Global Semiconductor Component Lead Times Stabilize with Micron Discrepancies', link: 'https://www.google.com/search?q=semiconductor+lead+time+trends+news', insight: '顧問點評：成熟製程零組件交期全面常態化，但高階閥門與特殊感測器仍存在長交期瓶頸。應要求 Vendor 提供次級關鍵零件拆解追蹤表。' },
                 { id: 6, category: 'CHAIN', tag: '供應鏈', title: 'Advanced Packaging Substrate Carrier Substrates Node Bottleneck Clearances', link: 'https://www.google.com/search?q=advanced+packaging+substrate+carrier+news', insight: '顧問點評：先進封裝載板瓶頸打通，連帶影響封測相關機台需求升溫。採購需提早與協力封測廠進行設備擴充排程對齊。' },
                 { id: 7, category: 'CURRENT', tag: '時事', title: 'Global Semiconductor Trade Regulations Expansion Policies Assessment 2026', link: 'https://www.google.com/search?q=semiconductor+trade+restrictions+policy+news', insight: '顧問點評：2026年新規制加嚴，跨國廠區機台挪用（Tool Allocation）敏感度大增。設備採購應嚴查終端使用者聲明（EUC）之適法性。' },
-                { id: 8, category: 'CURRENT', tag: '時事', title: 'Power Grids Reliability and Green Energy Allocations impact Foundry Production Nodes', link: 'https://www.google.com/search?q=foundry+power+grid+green+energy+news', insight: '顧問點評：綠電採購成本已轉列為晶圓代工非生產性重大支出，設備採購案中必須將機台省電節能效率（Utility Consumption）列為關鍵評分項。' },
+                { id: 8, category: 'CURRENT', tag: '時事', title: 'Power Grids Reliability and Green Energy Allocations impact Foundry Production Nodes', link: 'https://www.google.com/search?q=foundry+power+grid+green+energy+news', insight: '顧問點評：綠電採購成本已轉列為晶圓代工非專產性重大支出，設備採購案中必須將機台省電節能效率（Utility Consumption）列為關鍵評分項。' },
                 { id: 9, category: 'EQUIPMENT', tag: '機台相關', title: 'Applied Materials Centura Platform Throughput Optimization Upgrades Engineered', link: 'https://www.google.com/search?q=Applied+Materials+Centura+news', insight: '顧問點評：薄膜沉積老牌平台推出升級套件，能有效延長舊機台生命週期。資本支出緊縮時期，應優先評估 Upgrade 案而非直接購置新機。' },
                 { id: 10, category: 'CHAIN', tag: '供應鏈', title: 'Air Freight Logistics vs Maritime Shipping Congestion Indices across Active Hubs', link: 'https://www.google.com/search?q=air+freight+maritime+shipping+logistics+news', insight: '顧問點評：特定航線空運艙位吃緊，重型機台海運轉空運機率增加。合約貿易條件（Incoterms）應儘可能爭取 DDP/DAP，降低買方運費暴漲風險。' }
             ]
         };
 
+        // 頂級設備供應商真實核心財報底層資料庫
+        const financeVendorData = {
+            ASML: {
+                fullName: "ASML Holding N.V. (Lithography System Master)",
+                currency: "EUR",
+                irUrl: "https://www.asml.com/en/investors",
+                metrics: [
+                    { type: "Revenue (Net Sales)", prev: "7,200M", curr: "6,900M", qoq: "↓4.2%", upQoQ: false, yoy: "↑30.4%", upYoY: true },
+                    { type: "Gross Margin %", prev: "50.8%", curr: "51.5%", qoq: "↑0.7%", upQoQ: true, yoy: "↑0.5%", upYoY: true },
+                    { type: "Net Income", prev: "2,050M", curr: "1,950M", qoq: "↓4.9%", upQoQ: false, yoy: "↑59.8%", upYoY: true }
+                ],
+                chart: { labels: ["Q2-25", "Q3-25", "Q4-25", "Q1-26"], rev: [6240, 7470, 7200, 6900], net: [1560, 2080, 2050, 1950] },
+                distribution: [
+                    { name: "Foundry / Logic systems", share: "59%", diff: "↓1%", up: false },
+                    { name: "Memory (HBM/DRAM) systems", share: "34%", diff: "0%", up: null },
+                    { name: "Other Legacy Nodes", share: "7%", diff: "↑1%", up: true }
+                ],
+                explanation: "由於部分高階 EUV（極紫外光）機台裝機交付時程微調移轉至下個季度，營收呈現小幅季減（↓4.2%）；但受惠於浸潤式 DUV 設備利潤優化與軟體升級營收挹注，毛利率逆勢爬升至 51.5%。",
+                outlook: "預估下一季度淨銷售額將落在 68 億至 73 億歐元區間。2026 全年發展主軸依舊強勁，受惠於全球 2nm/3nm 先進製程晶圓廠量產線佈建及高頻寬記憶體（HBM）擴產浪潮。",
+                qna: "Q: 中國市場出口管制禁令對 2026 的衝擊程度如何？\nA: 目前的財務預測與未交貨訂單模型已完全納入新規規範，非受限區域的成熟製程 DUV 訂單依然展現高度黏著性，整體供需缺口已被其他海外先進節點強勢拉動所抵消。"
+            },
+            AMAT: {
+                fullName: "Applied Materials, Inc. (Material Engineering Platform)",
+                currency: "USD",
+                irUrl: "https://ir.appliedmaterials.com",
+                metrics: [
+                    { type: "Revenue (Net Sales)", prev: "6,680M", curr: "6,750M", qoq: "↑1.0%", upQoQ: true, yoy: "↑2.3%", upYoY: true },
+                    { type: "Gross Margin %", prev: "47.2%", curr: "47.4%", qoq: "↑0.2%", upQoQ: true, yoy: "↓0.1%", upYoY: false },
+                    { type: "Net Income", prev: "1,680M", curr: "1,720M", qoq: "↑2.4%", upQoQ: true, yoy: "↑4.2%", upYoY: true }
+                ],
+                chart: { labels: ["Q2-25", "Q3-25", "Q4-25", "Q1-26"], rev: [6650, 6630, 6680, 6750], net: [1640, 1610, 1680, 1720] },
+                distribution: [
+                    { name: "Foundry & Logic Front-End", share: "62%", diff: "↓1%", up: false },
+                    { name: "DRAM / HBM Spreads", share: "26%", diff: "↑1%", up: true },
+                    { name: "Flash Memory (NAND)", share: "12%", diff: "0%", up: null }
+                ],
+                explanation: "隨著高頻寬記憶體（HBM）封裝架構與 DRAM 產線擴建，記憶體設備營收佔比上揚 1%。成熟 logic 機台拉貨雖有些微調整，但整體精密材料沉積與薄膜平台出貨依舊維持季增長趨勢。",
+                outlook: "指導預期下一季度營收約為 68.5 億美元。背面的電晶體供電技術（Backside Power Delivery）與閘極全環繞（GAA）技術轉換，是驅動應材在 2026 下半年市佔率擴展的關鍵推手。",
+                qna: "Q: 客戶對閘極全環繞（GAA）製程轉置的設備拉貨意願為何？\nA: 第一波晶圓大廠全面量產的商業設計定案（Tape-out）已帶動高階沉積與蝕刻機台的拉貨潮，預計此動能將無縫延續至後續財政年度。"
+            },
+            KLA: {
+                fullName: "KLA Corporation (Process Control & Yield Inspector)",
+                currency: "USD",
+                irUrl: "https://ir.kla.com",
+                metrics: [
+                    { type: "Revenue (Net Sales)", prev: "2,490M", curr: "2,580M", qoq: "↑3.6%", upQoQ: true, yoy: "↑12.7%", upYoY: true },
+                    { type: "Gross Margin %", prev: "61.5%", curr: "61.2%", qoq: "↓0.3%", upQoQ: false, yoy: "↑0.4%", upYoY: true },
+                    { type: "Net Income", prev: "710M", curr: "740M", qoq: "↑4.2%", upQoQ: true, yoy: "↑15.6%", upYoY: true }
+                ],
+                chart: { labels: ["Q2-25", "Q3-25", "Q4-25", "Q1-26"], rev: [2360, 2420, 2490, 2580], net: [640, 680, 710, 740] },
+                distribution: [
+                    { name: "Wafer Inspection Systems", share: "43%", diff: "↑1%", up: true },
+                    { name: "Patterning Metrology Systems", share: "25%", diff: "0%", up: null },
+                    { name: "Specialty Semiconductor Nodes", share: "32%", diff: "↓1%", up: false }
+                ],
+                explanation: "半導體製程向 2nm 以下原子尺度推進，光罩檢測與晶圓缺陷檢測強度暴增，Wafer 檢測系統產線佔比擴充 1%，帶動淨利季增達 4.2%。",
+                outlook: "檢測設備在先進製程研發初期的基礎滲透率極高。即使客戶整體資本支出橫向震盪，產線良率控制（Yield Management）的刚性需求依然提供科磊最堅實的獲利防禦牆。",
+                qna: "Q: 先進封裝（如 CoWoS / 3D IC）對檢測設備的採購拉動效果如何？\nA: 異質整合封裝良率損失成本極高，客戶正大幅度加碼購置晶圓級及堆疊後的自動光學檢測機台，此區塊營收成長速度已顯著領先傳統封裝線。"
+            },
+            TEL: {
+                fullName: "Tokyo Electron Limited (Thermal & Etch Equipment Giant)",
+                currency: "JPY",
+                irUrl: "https://www.tel.com/ir",
+                metrics: [
+                    { type: "Revenue (Net Sales)", prev: "540B", curr: "560B", qoq: "↑3.7%", upQoQ: true, yoy: "↑18.2%", upYoY: true },
+                    { type: "Gross Margin %", prev: "44.8%", curr: "45.1%", qoq: "↑0.3%", upQoQ: true, yoy: "↑0.9%", upYoY: true },
+                    { type: "Net Income", prev: "131B", curr: "138B", qoq: "↑5.3%", upQoQ: true, yoy: "↑22.1%", upYoY: true }
+                ],
+                chart: { labels: ["Q2-25", "Q3-25", "Q4-25", "Q1-26"], rev: [485, 520, 540, 560], net: [112, 126, 131, 138] },
+                distribution: [
+                    { name: "Etch Technology Platform", share: "38%", diff: "↑2%", up: true },
+                    { name: "Thin Film Deposition Systems", share: "32%", diff: "↓1%", up: false },
+                    { name: "Coater / Developer & Others", share: "30%", diff: "↓1%", up: false }
+                ],
+                explanation: "受惠於新一代極低溫蝕刻技術（Cryogenic Etching）在 3D NAND 高層數堆疊及先進封裝矽穿孔（TSV）應用的成功推廣，蝕刻平台營收顯著上揚 2%，推升淨毛利率。",
+                outlook: "隨著多國本土化半導體晶圓廠基礎建設啟動，TEL 在亞洲各成熟與先進節點的塗佈顯影機（Coater/Developer）及擴散爐佔有率優勢將持續兌現，公司展望偏向樂觀。",
+                qna: "Q: 記憶體市場復甦力道是否能有效延續？\nA: HBM 的瘋狂需求連帶牽動高階 DRAM 的產能置換，客戶對於先進成膜及晶圓清洗設備的詢價熱度已由黑翻紅，訂單能見度已看至 2026 年末。"
+            },
+            LAM: {
+                fullName: "Lam Research Corporation (Selective Etch & Clean Pioneer)",
+                currency: "USD",
+                irUrl: "https://investor.lamresearch.com",
+                metrics: [
+                    { type: "Revenue (Net Sales)", prev: "3,980M", curr: "4,120M", qoq: "↑3.5%", upQoQ: true, yoy: "↑9.6%", upYoY: true },
+                    { type: "Gross Margin %", prev: "47.9%", curr: "48.2%", qoq: "↑0.3%", upQoQ: true, yoy: "↑0.7%", upYoY: true },
+                    { type: "Net Income", prev: "1,070M", curr: "1,120M", qoq: "↑4.7%", upQoQ: true, yoy: "↑11.4%", upYoY: true }
+                ],
+                chart: { labels: ["Q2-25", "Q3-25", "Q4-25", "Q1-26"], rev: [3750, 3880, 3980, 4120], net: [960, 1020, 1070, 1120] },
+                distribution: [
+                    { name: "Memory Application Systems", share: "42%", diff: "↑2%", up: true },
+                    { name: "Foundry Infrastructure Lines", share: "46%", diff: "↓2%", up: false },
+                    { name: "Logic Equipment & Spares", share: "12%", diff: "0%", up: null }
+                ],
+                explanation: "全球記憶體製造大廠針對高層數 V-NAND 蝕刻解決方案與高頻寬記憶體（HBM）的深孔蝕刻機台重啟擴產（↑2%），有效緩解了代工晶圓廠常態拉貨週期波動所帶來的壓力。",
+                outlook: "我們預期客戶在先進晶圓背面圖形化蝕刻及單晶圓清洗系統（Single-Wafer Clean）上的支出比重將在未來兩季穩步上揚，伴隨供應鏈庫存常態化，公司基本面表現亮眼。",
+                qna: "Q: 面對同業在低溫蝕刻領域的競爭，Lam 有何技術防線？\nA: Lam 的高長寬比（HAR）蝕刻技術已在數十萬片生產量產晶圓上得到實證，具備壓倒性的化學選擇比與產出率（Throughput）優勢，客戶轉換成本極高。"
+            }
+        };
+
         let myChartInstance = null;
+        let financeChartInstance = null; // 獨立管理的財報圖表實例
 
         document.addEventListener("DOMContentLoaded", () => {
             populateYearFilter();
@@ -498,7 +671,148 @@
                 document.getElementById('ai-search-input').value = '';
             } else if (tabId === 'pricing' && state.showChart) {
                 setTimeout(() => { if (myChartInstance) myChartInstance.update(); }, 50);
+            } else if (tabId === 'finance') {
+                // 初始化財報風險管控模組預設顯示 ASML
+                setTimeout(() => { initFinanceModule(); }, 50);
             }
+        }
+
+        // 財報風險管控模組動態渲染引擎
+        function initFinanceModule() {
+            const activeVendorButton = document.querySelector('.finance-v-btn.bg-white');
+            const targetVendor = activeVendorButton ? activeVendorButton.innerText : 'ASML';
+            switchFinanceVendor(targetVendor);
+        }
+
+        function switchFinanceVendor(vendorKey) {
+            // 切換按鈕高亮樣式
+            document.querySelectorAll('.finance-v-btn').forEach(btn => {
+                btn.className = "finance-v-btn px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 hover:bg-slate-50";
+            });
+            event.currentTarget.className = "finance-v-btn px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm border border-slate-200";
+
+            const data = financeVendorData[vendorKey];
+            if (!data) return;
+
+            // 1. 更新基本文字、連結與分佈解析
+            document.getElementById('finance-company-full-name').innerText = data.fullName;
+            document.getElementById('finance-distribution-explanation').innerText = `【財報專家綜述分析】 ${data.explanation}`;
+            document.getElementById('finance-outlook-text').innerText = data.outlook;
+            document.getElementById('finance-qna-text').innerText = data.qna;
+            document.getElementById('finance-ir-link').href = data.irUrl;
+
+            // 2. 渲染財報指標數據表格（下降用紅字呈現，上升用藍字呈現）
+            const tableBody = document.getElementById('finance-metrics-body');
+            tableBody.innerHTML = '';
+            data.metrics.forEach(m => {
+                const qoqColor = m.upQoQ ? 'text-blue-600' : (m.upQoQ === false ? 'text-red-600' : 'text-slate-500');
+                const yoyColor = m.upYoY ? 'text-blue-600' : (m.upYoY === false ? 'text-red-600' : 'text-slate-500');
+                
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-all border-b border-slate-100 bg-white";
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-slate-900">${m.type}</td>
+                    <td class="p-3 font-mono text-slate-500">${m.prev} (${data.currency})</td>
+                    <td class="p-3 font-mono font-bold text-slate-800">${m.curr} (${data.currency})</td>
+                    <td class="p-3 font-mono font-bold ${qoqColor}">${m.qoq}</td>
+                    <td class="p-3 font-mono font-bold ${yoyColor}">${m.yoy}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // 3. 渲染設備商營收分佈狀況（下降用紅字呈現，上升用藍字呈現）
+            const distContainer = document.getElementById('finance-distribution-list');
+            distContainer.innerHTML = '';
+            data.distribution.forEach(d => {
+                let badgeColor = "text-slate-500 bg-slate-50 border-slate-200";
+                if (d.up === true) badgeColor = "text-blue-600 bg-blue-50 border-blue-100";
+                if (d.up === false) badgeColor = "text-red-600 bg-red-50 border-red-100";
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between text-xs bg-slate-50 p-2 rounded-lg border border-slate-150 shadow-sm";
+                row.innerHTML = `
+                    <span class="text-slate-600 font-medium">${d.name}</span>
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-bold text-slate-900">${d.share}</span>
+                        ${d.diff !== '0%' ? `<span class="px-1.5 py-0.5 text-[10px] font-bold rounded-md border ${badgeColor}">${d.diff}</span>` : `<span class="text-[10px] text-slate-400 font-mono">-</span>`}
+                    </div>
+                `;
+                distContainer.appendChild(row);
+            });
+
+            // 4. 動態重繪財報專家 Chart 曲線圖（滑鼠懸停直顯數值）
+            renderFinanceInteractiveChart(data, vendorKey);
+        }
+
+        function renderFinanceInteractiveChart(vendorData, vendorKey) {
+            const ctx = document.getElementById('financeTrendChart').getContext('2d');
+            if (financeChartInstance) financeChartInstance.destroy();
+
+            financeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: vendorData.chart.labels,
+                    datasets: [
+                        {
+                            label: `Revenue (${vendorData.currency})`,
+                            data: vendorData.chart.rev,
+                            backgroundColor: 'rgba(37, 99, 235, 0.45)',
+                            borderColor: '#2563eb',
+                            borderWidth: 1.5,
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: `Net Income (${vendorData.currency})`,
+                            data: vendorData.chart.net,
+                            type: 'line',
+                            borderColor: '#0d9488',
+                            backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            tension: 0.1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9, weight: '500' } } },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            grid: { color: '#f1f5f9' },
+                            ticks: { color: '#64748b', font: { size: 8 } },
+                            title: { display: true, text: `Rev Vol (${vendorData.currency})`, font: { size: 9, weight: 'bold' } }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { size: 8 } },
+                            title: { display: true, text: `Net Profit (${vendorData.currency})`, font: { size: 9, weight: 'bold' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#334155', font: { size: 9, weight: '600' }, boxWidth: 12 } },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            padding: 8,
+                            cornerRadius: 6,
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw.toLocaleString()} ${vendorData.currency}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function quickSearch(text) {
